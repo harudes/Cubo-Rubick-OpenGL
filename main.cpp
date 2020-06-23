@@ -16,7 +16,7 @@ glm::mat4 modelview;
 
 glm::vec3 cameraCenter(0, 0, 0);
 glm::vec3 cameraUp(0, 0, 1);
-glm::vec3 cameraEye(0, -2, 0);
+glm::vec3 cameraEye(3, 3, 0);
 
 GLuint projectionPos;
 GLuint modelviewPos;
@@ -32,7 +32,7 @@ const char *vertexShaderSource = "#version 330 core\n"
 "uniform mat4 projection;"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(aPos, 1.0f);\n"
+"   gl_Position = projection * modelview * vec4(aPos, 1.0f);\n"
 "	Color = aColor;"
 "}\0";
 
@@ -86,13 +86,14 @@ int main()
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
 
-
+	glUseProgram(shaderProgram);
 
 	projectionPos = glGetUniformLocation(shaderProgram, "projection");
 	modelviewPos = glGetUniformLocation(shaderProgram, "modelview");
+	modelview = glm::lookAt(cameraEye,cameraCenter,cameraUp);
 	projection = glm::mat4(1.0f);
-	modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
 	framebuffer_size_callback(window, 500, 500);
+	glUniformMatrix4fv(projectionPos, 1, GL_FALSE, &projection[0][0]);
 	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
 
 	//El primer parametro es un vec3, el centro del cubo
@@ -104,12 +105,19 @@ int main()
 	Cube testCube3(glm::vec3(-0.55, 0.0, 0.0), 0.5, { ORANGE,WHITE,RED,GREEN,BLUE,YELLOW }, shaderProgram);
 	//Cube testCube(vertices, colors, indices, shaderProgram);
 	
+	glm::vec4 testPoint(0.5,0.5,0.5,1.0);
+
+	testPoint = projection * modelview * testPoint;
+
+	std::cout << testPoint.x << " " << testPoint.y << " " << testPoint.z << std::endl;
 
 	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		
+		modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
+
+		glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -128,7 +136,7 @@ int main()
 
 void processInput(GLFWwindow *window)
 {
-
+	
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h)
@@ -141,8 +149,8 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 
 	if (h > 0)
 	{
+		//projection = glm::perspective(30.0f / 180.0f * glm::pi<float>(), (GLfloat)w / (GLfloat)h, 1.0f, 100.0f);
 		projection = glm::perspective(30.0f / 180.0f * glm::pi<float>(), (GLfloat)w / (GLfloat)h, 1.0f, 100.0f);
-		
 		glUniformMatrix4fv(projectionPos, 1, GL_FALSE, &projection[0][0]);
 	}
 }
