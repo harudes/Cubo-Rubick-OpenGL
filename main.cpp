@@ -16,7 +16,7 @@ glm::mat4 modelview;
 
 glm::vec3 cameraCenter(0, 0, 0);
 glm::vec3 cameraUp(0, 0, 1);
-glm::vec3 cameraEye(3, 3, 0);
+glm::vec3 cameraEye(5, 0, 0);
 
 GLuint projectionPos;
 GLuint modelviewPos;
@@ -100,9 +100,48 @@ int main()
 	//El segundo parametro es un GLfloat, la longitud de las aristas
 	//El tercer parametro es un vector de 6 vec3, que representan los colores de cada cara, tengo algunos defines con los colores del cubo
 	//El cuarto parametro es el programa, por si en algun momento usamos diferentes shaders
-	Cube testCube(glm::vec3(0.55, 0.0, 0.0), 0.5, { ORANGE,WHITE,RED,GREEN,BLUE,YELLOW },shaderProgram);
-	Cube testCube2(glm::vec3(0.0, 0.0, 0.0), 0.5, { ORANGE,WHITE,RED,GREEN,BLUE,YELLOW }, shaderProgram);
-	Cube testCube3(glm::vec3(-0.55, 0.0, 0.0), 0.5, { ORANGE,WHITE,RED,GREEN,BLUE,YELLOW }, shaderProgram);
+
+	
+
+	Cube testCube4(glm::vec3(0.55, -0.55, 0.0), 0.5, { BLACK,BLACK,RED,BLACK,BLACK,YELLOW }, shaderProgram);
+	Cube testCube5(glm::vec3(0.0, -0.55, 0.0), 0.5, { BLACK,BLACK,RED,BLACK,BLACK,BLACK }, shaderProgram);
+	Cube testCube6(glm::vec3(-0.55, -0.55, 0.0), 0.5, { BLACK,BLACK,RED,BLACK,WHITE,BLACK }, shaderProgram);
+
+	Cube testCube(glm::vec3(0.55, 0.0, 0.0), 0.5, { BLACK,BLACK,BLACK,BLACK,BLACK,YELLOW }, shaderProgram);
+	Cube testCube2(glm::vec3(0.0, 0.0, 0.0), 0.5, { BLACK,BLACK,BLACK,BLACK,BLACK,BLACK }, shaderProgram);
+	Cube testCube3(glm::vec3(-0.55, 0.0, 0.0), 0.5, { BLACK,BLACK,BLACK,BLACK,WHITE,BLACK }, shaderProgram);
+
+	Cube testCube7(glm::vec3(0.55, 0.55, 0.0), 0.5, { BLACK,BLACK,BLACK,ORANGE,BLACK,YELLOW }, shaderProgram);
+	Cube testCube8(glm::vec3(0.0, 0.55, 0.0), 0.5, { BLACK,BLACK,BLACK,ORANGE,BLACK,BLACK }, shaderProgram);
+	Cube testCube9(glm::vec3(-0.55, 0.55, 0.0), 0.5, { BLACK,BLACK,BLACK,ORANGE,WHITE,BLACK }, shaderProgram);
+
+
+
+	Cube testCube10(glm::vec3(0.55, -0.55, 0.55), 0.5, { BLACK,BLUE,RED,BLACK,BLACK,YELLOW }, shaderProgram);
+	Cube testCube11(glm::vec3(0.0, -0.55, 0.55), 0.5, { BLACK,BLUE,RED,BLACK,BLACK,BLACK }, shaderProgram);
+	Cube testCube12(glm::vec3(-0.55, -0.55, 0.55), 0.5, { BLACK,BLUE,RED,BLACK,WHITE,BLACK }, shaderProgram);
+
+	Cube testCube13(glm::vec3(0.55, 0.0, 0.55), 0.5, { BLACK,BLUE,BLACK,BLACK,BLACK,YELLOW }, shaderProgram);
+	Cube testCube14(glm::vec3(0.0, 0.0, 0.55), 0.5, { BLACK,BLUE,BLACK,BLACK,BLACK,BLACK }, shaderProgram);
+	Cube testCube15(glm::vec3(-0.55, 0.0, 0.55), 0.5, { BLACK,BLUE,BLACK,BLACK,WHITE,BLACK }, shaderProgram);
+
+	Cube testCube16(glm::vec3(0.55, 0.55, 0.55), 0.5, { BLACK,BLUE,BLACK,ORANGE,BLACK,YELLOW }, shaderProgram);
+	Cube testCube17(glm::vec3(0.0, 0.55, 0.55), 0.5, { BLACK,BLUE,BLACK,ORANGE,BLACK,BLACK }, shaderProgram);
+	Cube testCube18(glm::vec3(-0.55, 0.55, 0.55), 0.5, { BLACK,BLUE,BLACK,ORANGE,WHITE,BLACK }, shaderProgram);
+
+
+
+	Cube testCube19(glm::vec3(0.55, -0.55, -0.55), 0.5, { GREEN,BLACK,RED,BLACK,BLACK,YELLOW }, shaderProgram);
+	Cube testCube20(glm::vec3(0.0, -0.55, -0.55), 0.5, { GREEN,BLACK,RED,BLACK,BLACK,BLACK }, shaderProgram);
+	Cube testCube21(glm::vec3(-0.55, -0.55, -0.55), 0.5, { GREEN,BLACK,RED,BLACK,WHITE,BLACK }, shaderProgram);
+
+	Cube testCube22(glm::vec3(0.55, 0.0, -0.55), 0.5, { GREEN,BLACK,BLACK,BLACK,BLACK,YELLOW }, shaderProgram);
+	Cube testCube23(glm::vec3(0.0, 0.0, -0.55), 0.5, { GREEN,BLACK,BLACK,BLACK,BLACK,BLACK }, shaderProgram);
+	Cube testCube24(glm::vec3(-0.55, 0.0, -0.55), 0.5, { GREEN,BLACK,BLACK,BLACK,WHITE,BLACK }, shaderProgram);
+
+	Cube testCube25(glm::vec3(0.55, 0.55, -0.55), 0.5, { GREEN,BLACK,BLACK,ORANGE,BLACK,YELLOW }, shaderProgram);
+	Cube testCube26(glm::vec3(0.0, 0.55, -0.55), 0.5, { GREEN,BLACK,BLACK,ORANGE,BLACK,BLACK }, shaderProgram);
+	Cube testCube27(glm::vec3(-0.55, 0.55, -0.55), 0.5, { GREEN,BLACK,BLACK,ORANGE,WHITE,BLACK }, shaderProgram);
 	//Cube testCube(vertices, colors, indices, shaderProgram);
 	
 	glm::vec4 testPoint(0.5,0.5,0.5,1.0);
@@ -115,9 +154,10 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
-		modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
+		
 
-		glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
+
+
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -125,6 +165,32 @@ int main()
 		testCube.draw();
 		testCube2.draw();
 		testCube3.draw();
+		testCube4.draw();
+		testCube5.draw();
+		testCube6.draw();
+		testCube7.draw();
+		testCube8.draw();
+		testCube9.draw();
+
+		testCube10.draw();
+		testCube11.draw();
+		testCube12.draw();
+		testCube13.draw();
+		testCube14.draw();
+		testCube15.draw();
+		testCube16.draw();
+		testCube17.draw();
+		testCube18.draw();
+
+		testCube19.draw();
+		testCube20.draw();
+		testCube21.draw();
+		testCube22.draw();
+		testCube23.draw();
+		testCube24.draw();
+		testCube25.draw();
+		testCube26.draw();
+		testCube27.draw();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -157,6 +223,40 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	glm::mat4 rotation = glm::mat4(1.0f);
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		rotation = glm::rotate(glm::mat4(1.0f), glm::pi<float>()/12, glm::vec3(0.0f, 0.0f, 1.0f));
+		
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		rotation = glm::rotate(glm::mat4(1.0f), -glm::pi<float>() / 12, glm::vec3(0.0f, 0.0f, 1.0f));
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		if (abs(cameraEye.x) < 0.00001f) {
+			rotation = glm::rotate(glm::mat4(1.0f), -glm::pi<float>() / 12, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (abs(cameraEye.y) < 0.00001f){
+			rotation = glm::rotate(glm::mat4(1.0f), -glm::pi<float>() / 12, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		if (abs(cameraEye.x) < 0.0001f) {
+			rotation = glm::rotate(glm::mat4(1.0f), glm::pi<float>() / 12, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		if (abs(cameraEye.y) < 0.0001f) {
+			rotation = glm::rotate(glm::mat4(1.0f), glm::pi<float>() / 12, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+	}
+
+	cameraEye = glm::mat3(rotation) * cameraEye;
+	cameraUp = glm::mat3(rotation) * cameraUp;
+
+	modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
+	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
 }
