@@ -9,14 +9,19 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void processInput(GLFWwindow *window);
+void processInput(GLFWwindow* window);
 
 glm::mat4 projection;
 glm::mat4 modelview;
 
 glm::vec3 cameraCenter(0, 0, 0);
+<<<<<<< HEAD
+glm::vec3 cameraUp(0, 1, -1);
+glm::vec3 cameraEye(0, 2, 2);
+=======
 glm::vec3 cameraUp(0, 0, 1);
 glm::vec3 cameraEye(5, 0, 0);
+>>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 
 GLuint projectionPos;
 GLuint modelviewPos;
@@ -24,29 +29,35 @@ GLuint modelviewPos;
 const unsigned int SCR_WIDTH = 500;
 const unsigned int SCR_HEIGHT = 500;
 
-const char *vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec3 aColor;"
-"out vec3 Color;"
-"uniform mat4 modelview;"
-"uniform mat4 projection;"
+const char* vertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 position;\n"
+"layout (location = 1) in vec3 color;\n"
+"out vec3 Color;\n"
+"uniform mat4 modelview;\n"
+"uniform mat4 projection;\n"
 "void main()\n"
 "{\n"
+<<<<<<< HEAD
+"   gl_Position = projection * modelview * vec4(position, 1.0f);\n"
+"	Color = color;\n"
+"}\n\0";
+=======
 "   gl_Position = projection * modelview * vec4(aPos, 1.0f);\n"
 "	Color = aColor;"
 "}\0";
+>>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 
-const char *fragmentShaderSource = "#version 330 core\n"
+const char* fragmentShaderSource = "#version 330 core\n"
 "in vec3 Color;\n"
-"out vec4 FragColor;\n"
-"void main()\n"
+"out vec4 fragColor;\n"
+"void main(void)\n"
 "{\n"
-"   FragColor = vec4(Color, 1.0f);\n"
+"   fragColor = vec4(Color, 1.0f);\n"
 "}\n\0";
 
 int main()
 {
-	
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -81,12 +92,23 @@ int main()
 	glCompileShader(vertexShader);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
-
+	GLint linked;
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
+<<<<<<< HEAD
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linked);
+	if (linked) {
+		glUseProgram(shaderProgram);
+		std::cout << "Success\n";
+	}
+	else {
+		std::cout << "Error\n";
+	}
+=======
 
 	glUseProgram(shaderProgram);
+>>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 
 	projectionPos = glGetUniformLocation(shaderProgram, "projection");
 	modelviewPos = glGetUniformLocation(shaderProgram, "modelview");
@@ -100,6 +122,13 @@ int main()
 	//El segundo parametro es un GLfloat, la longitud de las aristas
 	//El tercer parametro es un vector de 6 vec3, que representan los colores de cada cara, tengo algunos defines con los colores del cubo
 	//El cuarto parametro es el programa, por si en algun momento usamos diferentes shaders
+<<<<<<< HEAD
+	Cube testCube(glm::vec3(0.55, 0.0, 0.0), 0.5, { ORANGE,WHITE,RED,GREEN,BLUE,YELLOW }, shaderProgram);
+	Cube testCube2(glm::vec3(0.0, 0.0, 0.0), 0.5, { WHITE,WHITE,RED,GREEN,BLUE,YELLOW }, shaderProgram);
+	Cube testCube3(glm::vec3(-0.55, 0.0, 0.0), 0.5, { ORANGE,WHITE,RED,GREEN,BLUE,YELLOW }, shaderProgram);
+	//Cube testCube(vertices, colors, indices, shaderProgram);
+
+=======
 
 	
 
@@ -149,18 +178,22 @@ int main()
 	testPoint = projection * modelview * testPoint;
 
 	std::cout << testPoint.x << " " << testPoint.y << " " << testPoint.z << std::endl;
+>>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 
 	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window))
 	{
+<<<<<<< HEAD
+=======
 		
 
 
+>>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
 		processInput(window);
 		testCube.draw();
 		testCube2.draw();
@@ -200,7 +233,7 @@ int main()
 	return 0;
 }
 
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow* window)
 {
 	
 }
@@ -217,6 +250,10 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 	{
 		//projection = glm::perspective(30.0f / 180.0f * glm::pi<float>(), (GLfloat)w / (GLfloat)h, 1.0f, 100.0f);
 		projection = glm::perspective(30.0f / 180.0f * glm::pi<float>(), (GLfloat)w / (GLfloat)h, 1.0f, 100.0f);
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 		glUniformMatrix4fv(projectionPos, 1, GL_FALSE, &projection[0][0]);
 	}
 }
