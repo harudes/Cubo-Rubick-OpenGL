@@ -16,8 +16,8 @@ if (WSAStartup(0x101, &wsaData) != 0)
 memBuffer = readUrl2(szUrl, fileSize, &headerBuffer);
 ```
 Pero lo único que te debe interesar es como crear cubo aleatorio y como obtener su solución:
-```javascript
-std::string data=GetData(); //Obtenemos los datos en bruto
+```c++
+std::string data = GetData(); //Obtenemos los datos en bruto
 std::string cubo = get_cubo(data); //Obtenemos el Cubo
 std::vector<std::string> solution = get_solution(data); //Obtenemos su solución
 ```
@@ -27,7 +27,7 @@ La cadena consta de 54 caracteres, 9 caretas por cara:
 ```javascript
 "UUUUUUUUUR...F...D...L...B..."
 ```
-`U` significa una careta del color de la cara hacia arriba,` R` significa una careta del color de la cara derecha, etc.
+`U` significa una careta del color de la cara hacia arriba, `R` significa una careta del color de la cara derecha, etc.
 El siguiente diagrama muestra el orden de las caretas:
 
 ```
