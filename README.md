@@ -4,7 +4,7 @@
 
 ## Examples
 `AKube.h` te proporciona una gran variedad de funciones, entre ellas hacer un petición GET a una página:
-```javascript
+```c++
 const int bufLen = 1024;
 const char* szUrl = "https://akube.herokuapp.com/";
 long fileSize;
