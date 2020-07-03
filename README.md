@@ -27,6 +27,15 @@ La cadena consta de 54 caracteres, 9 caretas por cara:
 ```javascript
 "UUUUUUUUUR...F...D...L...B..."
 ```
+La codificación del cubo es la siguiente:
+```javascript
+-Las 9 primeras letras corresponden a la cara superior.
+-Las 9 siguientes letras corresponden a la cara derecha.
+-Las 9 siguientes letras corresponden a la cara frontal.
+-Las 9 siguientes letras corresponden a la cara inferior.
+-Las 9 siguientes letras corresponden a la cara izquierda.
+-Las 9 últimas letras corresponden a la cara trasera.
+```
 `U` significa una careta del color de la cara hacia arriba, `R` significa una careta del color de la cara derecha, etc.
 El siguiente diagrama muestra el orden de las caretas:
 
