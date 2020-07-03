@@ -9,6 +9,11 @@ Cube::Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program) :vertex
 //El tercer parametro es un vector de 6 vec3, que representan los colores de cada cara, tengo algunos defines con los colores del cubo
 //El cuarto parametro es el programa, por si en algun momento usamos diferentes shaders
 Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, GLuint program) :vertexNum(24),indexNum(36),shaderProgram(program) {
+
+	model = glm::mat4(1.0);
+
+	modelPos = glGetUniformLocation(shaderProgram, "model");
+
 	GLfloat side = sideLength / 2.0;
 
 	vertices = new GLfloat[72];
@@ -94,6 +99,9 @@ void Cube::draw() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertexNum * 3, vertices, GL_STATIC_DRAW);
 
 	glUseProgram(shaderProgram);
+
+	glUniformMatrix4fv(modelPos, 1, GL_FALSE, &model[0][0]);
+
 	glDrawElements(GL_TRIANGLES, indexNum, GL_UNSIGNED_INT, 0);
 }
 
