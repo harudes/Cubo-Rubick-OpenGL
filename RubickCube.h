@@ -1,9 +1,9 @@
 #pragma once
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-#pragma once
 //#include "AKube.h"
 #include "Cube.h"
+#include <iostream>
 
 class RubickCube{
 private:
@@ -11,7 +11,7 @@ private:
 
 public:
 	RubickCube();
-    RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram);
+    RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram, std::string colors="UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB");
 	void Draw();
 	void generateRandomCube();
 	void Solve();

@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include "RubickCube.h"
+#include "AKube.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h);
@@ -16,8 +17,8 @@ void processInput(GLFWwindow* window);
 GLfloat centerX = 0.0f,
 centerY = 0.0f,
 centerZ = 0.0f;
-GLfloat arista = 0.5; //tamaño de la arista de los cubitos
-GLfloat offset = 0.05;//tamaño de la distancia entre cubos
+GLfloat arista = 0.5; //tamaÃ±o de la arista de los cubitos
+GLfloat offset = 0.05;//tamaÃ±o de la distancia entre cubos
 GLuint shader;
 RubickCube* cuboRubick;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,11 +47,12 @@ const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 position;\n"
 "layout (location = 1) in vec3 color;\n"
 "out vec3 Color;\n"
-"uniform mat4 modelview;\n"
+"uniform mat4 model;\n"
+"uniform mat4 view;\n"
 "uniform mat4 projection;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = projection * modelview * vec4(position, 1.0f);\n"
+"   gl_Position = projection * view * model * vec4(position, 1.0f);\n"
 "	Color = color;\n"
 "}\n\0";
 
@@ -114,7 +116,7 @@ int main()
 	glUseProgram(shaderProgram);
 
 	projectionPos = glGetUniformLocation(shaderProgram, "projection");
-	modelviewPos = glGetUniformLocation(shaderProgram, "modelview");
+	modelviewPos = glGetUniformLocation(shaderProgram, "view");
 	modelview = glm::lookAt(cameraEye,cameraCenter,cameraUp);
 	projection = glm::mat4(1.0f);
 	framebuffer_size_callback(window, 500, 500);
@@ -124,7 +126,10 @@ int main()
 
 	//~~~~~~~~~~~~~~~~ CREATE THE RUBICK'S CUBE~~~~~~~~~~~~~~~~~~	
 	shader = shaderProgram;
-	cuboRubick = new RubickCube(glm::vec3(centerX,centerY,centerZ), arista, offset, shader);
+	string cubeData = GetData();
+	string cubeColors = get_cubo(cubeData);
+	//cuboRubick = new RubickCube(glm::vec3(centerX,centerY,centerZ), arista, offset, shader);
+	cuboRubick = new RubickCube(glm::vec3(centerX, centerY, centerZ), arista, offset, shader, cubeColors);
 
 
 	glEnable(GL_DEPTH_TEST);
