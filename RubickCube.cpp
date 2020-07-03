@@ -99,7 +99,7 @@ void RubickCube::generateCube(){
 																																										 //---
 	cubitos[9] = new Cube(glm::vec3((centerX + arista + offset), (centerY - arista - offset), (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U7")]),getCharColor(colors[getDuplePosition("L3")]),BLACK,BLACK,getCharColor(colors[getDuplePosition("F1")]) }, shaderProgram);//F1, L3, U7
 	cubitos[10] = new Cube(glm::vec3(centerX, (centerY - arista - offset), (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U4")]),getCharColor(colors[getDuplePosition("L2")]),BLACK,BLACK,BLACK }, shaderProgram);//L2, U4
-	cubitos[11] = new Cube(glm::vec3((centerX - arista - offset), (centerY - arista - offset), (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U1")]),getCharColor(colors[getDuplePosition("L1")]),BLACK,getCharColor(colors[getDuplePosition("B3")]),BLACK }, shaderProgram);//B3, L1, U7
+	cubitos[11] = new Cube(glm::vec3((centerX - arista - offset), (centerY - arista - offset), (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U1")]),getCharColor(colors[getDuplePosition("L1")]),BLACK,getCharColor(colors[getDuplePosition("B3")]),BLACK }, shaderProgram);//B3, L1, U1
 
 	cubitos[12] = new Cube(glm::vec3((centerX + arista + offset), centerY, (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U8")]),BLACK,BLACK,BLACK,getCharColor(colors[getDuplePosition("F2")]) }, shaderProgram);//F2, U8
 	cubitos[13] = new Cube(glm::vec3(centerX, centerY, (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U5")]),BLACK,BLACK,BLACK,BLACK }, shaderProgram);//U5
@@ -141,7 +141,22 @@ void RubickCube::Draw() {
 	}
 }
 
-
+void RubickCube::movement(std::string move) {
+	std::vector<int> sideCubes;
+	int axis;
+	GLfloat angle = glm::pi<float>() / 60;
+	switch (move[0]) {
+	case 'U':
+		sideCubes = { 11, 14, 17, 10, 13, 16, 9, 12, 15 };
+		axis = 2;
+		if (move.length() == 2 && move[1] == '\'')
+			angle *= -1;
+		break;
+	}
+	for (int i : sideCubes) {
+		cubitos[i]->rotate(angle, axis);
+	}
+}
 
 void RubickCube::Solve() {
 

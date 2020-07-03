@@ -8,6 +8,8 @@
 
 class RubickCube{
 private:
+	int animationCounter;
+
 	std::vector<Cube*> cubitos;
 	GLfloat centerX;
 	GLfloat centerY;
@@ -27,6 +29,7 @@ public:
 	void setColors(std::string colors);
 	void setOffset(GLfloat offset);
 	void Draw();
+	void movement(std::string move);
 	void Solve();
     ~RubickCube();
 };

@@ -105,6 +105,22 @@ void Cube::draw() {
 	glDrawElements(GL_TRIANGLES, indexNum, GL_UNSIGNED_INT, 0);
 }
 
+void Cube::rotate(GLfloat angle, int axis) {
+	glm::vec3 direction;
+	switch (axis) {
+	case 0:
+		direction = glm::vec3(1.0, 0.0, 0.0);
+		break;
+	case 1:
+		direction = glm::vec3(0.0, 1.0, 0.0);
+		break;
+	case 2:
+		direction = glm::vec3(0.0, 0.0, 1.0);
+		break;
+	}
+	model = glm::rotate(glm::mat4(1.0f), angle, direction)* model;
+}
+
 void Cube::init() {
 
 

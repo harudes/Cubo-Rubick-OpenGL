@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 
 #define RED glm::vec3(1.0,0.0,0.0)
@@ -23,5 +24,6 @@ public:
 	Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program);
 	Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, GLuint program);
 	void draw();
+	void rotate(GLfloat angle, int axis);
     ~Cube();
 };

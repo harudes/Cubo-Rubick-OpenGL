@@ -211,6 +211,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
 		cuboRubick->restartCube();
 		cuboRubick->generateCube();
+		cameraUp = glm::vec3(0, 0, 1);
+		cameraEye = glm::vec3(5, 0, 0);
+		modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
+		glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
 	}
 	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
 		//~~~~~~~~~~~~~~~~ OBTAINING RUBBICKS DISORDERED ~~~~~~~~~~~~~~~~~~	
@@ -219,6 +223,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		std::vector<std::string> solution = get_solution(data);
 		cuboRubick->setColors(cubo);
 		cuboRubick->generateCube();
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		cuboRubick->movement("U");
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		cuboRubick->movement("U\'");
 	}
 
 	cameraEye = glm::mat3(rotation) * cameraEye;
