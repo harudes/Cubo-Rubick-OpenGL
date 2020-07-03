@@ -4,6 +4,10 @@ Cube::Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program) :vertex
 	init();
 }
 
+//El primer parametro es un vec3, el centro del cubo
+//El segundo parametro es un GLfloat, la longitud de las aristas
+//El tercer parametro es un vector de 6 vec3, que representan los colores de cada cara, tengo algunos defines con los colores del cubo
+//El cuarto parametro es el programa, por si en algun momento usamos diferentes shaders
 Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, GLuint program) :vertexNum(24),indexNum(36),shaderProgram(program) {
 	GLfloat side = sideLength / 2.0;
 

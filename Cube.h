@@ -10,7 +10,7 @@
 #define WHITE glm::vec3(1.0,1.0,1.0)
 #define YELLOW glm::vec3(1.0,1.0,0.0)
 #define ORANGE glm::vec3(1.0,0.5,0.0)
-#define BLACK glm::vec3(0.0,0.0,1.0)
+#define BLACK glm::vec3(0.0,0.0,0.3)
 
 class Cube{
 	GLfloat *vertices, *vertexColors;

@@ -5,23 +5,36 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
-#include "Cube.h"
+#include "RubickCube.h"
+
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void processInput(GLFWwindow* window);
 
+//~~~~~~~~~~~~~~~~ GLOBAL VARIABLES OF THE RUBICK'S CUBE~~~~~~~~~~~~~~~~~~
+GLfloat centerX = 0.0f,
+centerY = 0.0f,
+centerZ = 0.0f;
+GLfloat arista = 0.5; //tamaño de la arista de los cubitos
+GLfloat offset = 0.05;//tamaño de la distancia entre cubos
+GLuint shader;
+RubickCube* cuboRubick;
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
 glm::mat4 projection;
 glm::mat4 modelview;
 
 glm::vec3 cameraCenter(0, 0, 0);
-<<<<<<< HEAD
+/*
 glm::vec3 cameraUp(0, 1, -1);
 glm::vec3 cameraEye(0, 2, 2);
-=======
+*/
+
 glm::vec3 cameraUp(0, 0, 1);
 glm::vec3 cameraEye(5, 0, 0);
->>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 
 GLuint projectionPos;
 GLuint modelviewPos;
@@ -37,15 +50,9 @@ const char* vertexShaderSource = "#version 330 core\n"
 "uniform mat4 projection;\n"
 "void main()\n"
 "{\n"
-<<<<<<< HEAD
 "   gl_Position = projection * modelview * vec4(position, 1.0f);\n"
 "	Color = color;\n"
 "}\n\0";
-=======
-"   gl_Position = projection * modelview * vec4(aPos, 1.0f);\n"
-"	Color = aColor;"
-"}\0";
->>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 
 const char* fragmentShaderSource = "#version 330 core\n"
 "in vec3 Color;\n"
@@ -57,7 +64,6 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 int main()
 {
-
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -96,7 +102,6 @@ int main()
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
-<<<<<<< HEAD
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linked);
 	if (linked) {
 		glUseProgram(shaderProgram);
@@ -105,10 +110,8 @@ int main()
 	else {
 		std::cout << "Error\n";
 	}
-=======
 
 	glUseProgram(shaderProgram);
->>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 
 	projectionPos = glGetUniformLocation(shaderProgram, "projection");
 	modelviewPos = glGetUniformLocation(shaderProgram, "modelview");
@@ -118,112 +121,20 @@ int main()
 	glUniformMatrix4fv(projectionPos, 1, GL_FALSE, &projection[0][0]);
 	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
 
-	//El primer parametro es un vec3, el centro del cubo
-	//El segundo parametro es un GLfloat, la longitud de las aristas
-	//El tercer parametro es un vector de 6 vec3, que representan los colores de cada cara, tengo algunos defines con los colores del cubo
-	//El cuarto parametro es el programa, por si en algun momento usamos diferentes shaders
-<<<<<<< HEAD
-	Cube testCube(glm::vec3(0.55, 0.0, 0.0), 0.5, { ORANGE,WHITE,RED,GREEN,BLUE,YELLOW }, shaderProgram);
-	Cube testCube2(glm::vec3(0.0, 0.0, 0.0), 0.5, { WHITE,WHITE,RED,GREEN,BLUE,YELLOW }, shaderProgram);
-	Cube testCube3(glm::vec3(-0.55, 0.0, 0.0), 0.5, { ORANGE,WHITE,RED,GREEN,BLUE,YELLOW }, shaderProgram);
-	//Cube testCube(vertices, colors, indices, shaderProgram);
 
-=======
+	//~~~~~~~~~~~~~~~~ CREATE THE RUBICK'S CUBE~~~~~~~~~~~~~~~~~~	
+	shader = shaderProgram;
+	cuboRubick = new RubickCube(glm::vec3(centerX,centerY,centerZ), arista, offset, shader);
 
-	
-
-	Cube testCube4(glm::vec3(0.55, -0.55, 0.0), 0.5, { BLACK,BLACK,RED,BLACK,BLACK,YELLOW }, shaderProgram);
-	Cube testCube5(glm::vec3(0.0, -0.55, 0.0), 0.5, { BLACK,BLACK,RED,BLACK,BLACK,BLACK }, shaderProgram);
-	Cube testCube6(glm::vec3(-0.55, -0.55, 0.0), 0.5, { BLACK,BLACK,RED,BLACK,WHITE,BLACK }, shaderProgram);
-
-	Cube testCube(glm::vec3(0.55, 0.0, 0.0), 0.5, { BLACK,BLACK,BLACK,BLACK,BLACK,YELLOW }, shaderProgram);
-	Cube testCube2(glm::vec3(0.0, 0.0, 0.0), 0.5, { BLACK,BLACK,BLACK,BLACK,BLACK,BLACK }, shaderProgram);
-	Cube testCube3(glm::vec3(-0.55, 0.0, 0.0), 0.5, { BLACK,BLACK,BLACK,BLACK,WHITE,BLACK }, shaderProgram);
-
-	Cube testCube7(glm::vec3(0.55, 0.55, 0.0), 0.5, { BLACK,BLACK,BLACK,ORANGE,BLACK,YELLOW }, shaderProgram);
-	Cube testCube8(glm::vec3(0.0, 0.55, 0.0), 0.5, { BLACK,BLACK,BLACK,ORANGE,BLACK,BLACK }, shaderProgram);
-	Cube testCube9(glm::vec3(-0.55, 0.55, 0.0), 0.5, { BLACK,BLACK,BLACK,ORANGE,WHITE,BLACK }, shaderProgram);
-
-
-
-	Cube testCube10(glm::vec3(0.55, -0.55, 0.55), 0.5, { BLACK,BLUE,RED,BLACK,BLACK,YELLOW }, shaderProgram);
-	Cube testCube11(glm::vec3(0.0, -0.55, 0.55), 0.5, { BLACK,BLUE,RED,BLACK,BLACK,BLACK }, shaderProgram);
-	Cube testCube12(glm::vec3(-0.55, -0.55, 0.55), 0.5, { BLACK,BLUE,RED,BLACK,WHITE,BLACK }, shaderProgram);
-
-	Cube testCube13(glm::vec3(0.55, 0.0, 0.55), 0.5, { BLACK,BLUE,BLACK,BLACK,BLACK,YELLOW }, shaderProgram);
-	Cube testCube14(glm::vec3(0.0, 0.0, 0.55), 0.5, { BLACK,BLUE,BLACK,BLACK,BLACK,BLACK }, shaderProgram);
-	Cube testCube15(glm::vec3(-0.55, 0.0, 0.55), 0.5, { BLACK,BLUE,BLACK,BLACK,WHITE,BLACK }, shaderProgram);
-
-	Cube testCube16(glm::vec3(0.55, 0.55, 0.55), 0.5, { BLACK,BLUE,BLACK,ORANGE,BLACK,YELLOW }, shaderProgram);
-	Cube testCube17(glm::vec3(0.0, 0.55, 0.55), 0.5, { BLACK,BLUE,BLACK,ORANGE,BLACK,BLACK }, shaderProgram);
-	Cube testCube18(glm::vec3(-0.55, 0.55, 0.55), 0.5, { BLACK,BLUE,BLACK,ORANGE,WHITE,BLACK }, shaderProgram);
-
-
-
-	Cube testCube19(glm::vec3(0.55, -0.55, -0.55), 0.5, { GREEN,BLACK,RED,BLACK,BLACK,YELLOW }, shaderProgram);
-	Cube testCube20(glm::vec3(0.0, -0.55, -0.55), 0.5, { GREEN,BLACK,RED,BLACK,BLACK,BLACK }, shaderProgram);
-	Cube testCube21(glm::vec3(-0.55, -0.55, -0.55), 0.5, { GREEN,BLACK,RED,BLACK,WHITE,BLACK }, shaderProgram);
-
-	Cube testCube22(glm::vec3(0.55, 0.0, -0.55), 0.5, { GREEN,BLACK,BLACK,BLACK,BLACK,YELLOW }, shaderProgram);
-	Cube testCube23(glm::vec3(0.0, 0.0, -0.55), 0.5, { GREEN,BLACK,BLACK,BLACK,BLACK,BLACK }, shaderProgram);
-	Cube testCube24(glm::vec3(-0.55, 0.0, -0.55), 0.5, { GREEN,BLACK,BLACK,BLACK,WHITE,BLACK }, shaderProgram);
-
-	Cube testCube25(glm::vec3(0.55, 0.55, -0.55), 0.5, { GREEN,BLACK,BLACK,ORANGE,BLACK,YELLOW }, shaderProgram);
-	Cube testCube26(glm::vec3(0.0, 0.55, -0.55), 0.5, { GREEN,BLACK,BLACK,ORANGE,BLACK,BLACK }, shaderProgram);
-	Cube testCube27(glm::vec3(-0.55, 0.55, -0.55), 0.5, { GREEN,BLACK,BLACK,ORANGE,WHITE,BLACK }, shaderProgram);
-	//Cube testCube(vertices, colors, indices, shaderProgram);
-	
-	glm::vec4 testPoint(0.5,0.5,0.5,1.0);
-
-	testPoint = projection * modelview * testPoint;
-
-	std::cout << testPoint.x << " " << testPoint.y << " " << testPoint.z << std::endl;
->>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 
 	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window))
 	{
-<<<<<<< HEAD
-=======
-		
-
-
->>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
-
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		processInput(window);
-		testCube.draw();
-		testCube2.draw();
-		testCube3.draw();
-		testCube4.draw();
-		testCube5.draw();
-		testCube6.draw();
-		testCube7.draw();
-		testCube8.draw();
-		testCube9.draw();
-
-		testCube10.draw();
-		testCube11.draw();
-		testCube12.draw();
-		testCube13.draw();
-		testCube14.draw();
-		testCube15.draw();
-		testCube16.draw();
-		testCube17.draw();
-		testCube18.draw();
-
-		testCube19.draw();
-		testCube20.draw();
-		testCube21.draw();
-		testCube22.draw();
-		testCube23.draw();
-		testCube24.draw();
-		testCube25.draw();
-		testCube26.draw();
-		testCube27.draw();
+		cuboRubick->Draw();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -250,10 +161,7 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 	{
 		//projection = glm::perspective(30.0f / 180.0f * glm::pi<float>(), (GLfloat)w / (GLfloat)h, 1.0f, 100.0f);
 		projection = glm::perspective(30.0f / 180.0f * glm::pi<float>(), (GLfloat)w / (GLfloat)h, 1.0f, 100.0f);
-<<<<<<< HEAD
 
-=======
->>>>>>> 5a2e19ea17bc99d19c1054437de05aecfa2b38e9
 		glUniformMatrix4fv(projectionPos, 1, GL_FALSE, &projection[0][0]);
 	}
 }
@@ -266,7 +174,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		rotation = glm::rotate(glm::mat4(1.0f), glm::pi<float>()/12, glm::vec3(0.0f, 0.0f, 1.0f));
-		
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
@@ -289,6 +196,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (abs(cameraEye.y) < 0.0001f) {
 			rotation = glm::rotate(glm::mat4(1.0f), glm::pi<float>() / 12, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		if (offset < 0.1) offset = 0.2;
+		else offset = 0.05;
+		cuboRubick = new RubickCube(glm::vec3(centerX, centerY, centerZ), arista, offset, shader);
 	}
 
 	cameraEye = glm::mat3(rotation) * cameraEye;
