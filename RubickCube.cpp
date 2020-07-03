@@ -13,17 +13,23 @@ Parametros de entrada:
 
 Genera un array de cubitos
 */
-RubickCube::RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram):cubitos(27,nullptr){
+RubickCube::RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram) :cubitos(27, nullptr) {
 	this->centerX = center.x;
 	this->centerY = center.y;
 	this->centerZ = center.z;
 	this->arista = arista;
 	this->offset = offset;
 	this->shaderProgram = shaderProgram;
+
+	restartCube();
+}
+
+void RubickCube::restartCube() {
+	this->colors = "UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRBBBBBBBBBDDDDDDDDD";
 }
 
 
-glm::vec3 getCharColor(char c) {
+glm::vec3 RubickCube::getCharColor(char c) {
 	glm::vec3 color;
 	switch (c) {
 	case 'F':
@@ -48,7 +54,7 @@ glm::vec3 getCharColor(char c) {
 	return color;
 }
 
-unsigned int getDuplePosition(std::string duple) {
+unsigned int RubickCube::getDuplePosition(std::string duple) {
 	int side, number;
 	switch (duple[0]) {
 	case 'F':
@@ -74,11 +80,7 @@ unsigned int getDuplePosition(std::string duple) {
 	return side * 9 + number - 1;
 }
 
-RubickCube::RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram, std::string colors):cubitos(27,nullptr){
-	GLfloat centerX = center.x;
-	GLfloat centerY = center.y;
-	GLfloat centerZ = center.z;	
-
+void RubickCube::generateCube(){
 	cubitos[0] = new Cube(glm::vec3((centerX + arista + offset), centerY, centerZ), arista, { BLACK,BLACK,BLACK,BLACK,BLACK,getCharColor(colors[getDuplePosition("F5")]) }, shaderProgram);//F5
 	cubitos[1] = new Cube(glm::vec3(centerX, centerY, centerZ), arista, { BLACK,BLACK,BLACK,BLACK,BLACK,BLACK }, shaderProgram);//centro
 	cubitos[2] = new Cube(glm::vec3((centerX - arista - offset), centerY, centerZ), arista, { BLACK,BLACK,BLACK,BLACK,getCharColor(colors[getDuplePosition("B5")]),BLACK }, shaderProgram);//B5
@@ -109,7 +111,6 @@ RubickCube::RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint 
 																																															 
 					
 
-																																															 /
 	cubitos[18] = new Cube(glm::vec3((centerX + arista + offset), (centerY - arista - offset), (centerZ - arista - offset)), arista, { getCharColor(colors[getDuplePosition("D1")]),BLACK,getCharColor(colors[getDuplePosition("L9")]),BLACK,BLACK,getCharColor(colors[getDuplePosition("F7")]) }, shaderProgram);//F7, L9, D1
 	cubitos[19] = new Cube(glm::vec3(centerX, (centerY - arista - offset), (centerZ - arista - offset)), arista, { getCharColor(colors[getDuplePosition("D4")]),BLACK,getCharColor(colors[getDuplePosition("L8")]),BLACK,BLACK,BLACK }, shaderProgram);//L8, D2
 	cubitos[20] = new Cube(glm::vec3((centerX - arista - offset), (centerY - arista - offset), (centerZ - arista - offset)), arista, { getCharColor(colors[getDuplePosition("D7")]),BLACK,getCharColor(colors[getDuplePosition("L7")]),BLACK,getCharColor(colors[getDuplePosition("B9")]),BLACK }, shaderProgram);//L7, B9, D3
@@ -126,41 +127,8 @@ RubickCube::RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint 
 
 
 
-std::vector<glm::vec3> RubickCube::generarColoresSegunPos() {
-	std::vector<glm::vec3> coloresPos(54);
-	char cara;
-	for (int i = 0; i < 54; ++i) {
-		cara = cuboString[i];
-		if (cara == 'U') {
-			std::cout << i << ": color azul" << std::endl;
-			coloresPos[i] = BLUE;
-		}
-		else if (cara == 'L') {
-			std::cout << i << ": color rojo" << std::endl;
-			coloresPos[i] = RED;
-		}
-		else if (cara == 'F') {
-			std::cout << i << ": color amarillo" << std::endl;
-			coloresPos[i] = YELLOW;
-		}
-		else if (cara == 'R') {
-			std::cout << i << ": color anaranjado" << std::endl;
-			coloresPos[i] = ORANGE;
-		}
-		else if (cara == 'B') {
-			std::cout << i << ": color white" << std::endl;
-			coloresPos[i] = WHITE;
-		}
-		else if (cara == 'D') {
-			std::cout << i << ": color verde" << std::endl;
-			coloresPos[i] = GREEN;
-		}
-	}
-	return coloresPos;
-}
-
-void RubickCube::setCuboString(std::string cuboString) {
-	this->cuboString = cuboString;
+void RubickCube::setColors(std::string colors) {
+	this->colors = colors;
 }
 
 void RubickCube::setOffset(GLfloat offset) {

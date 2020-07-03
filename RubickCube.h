@@ -16,17 +16,16 @@ private:
 	GLfloat offset;
 	GLuint shaderProgram;
 
-	std::string cuboString;
-
+	std::string colors;
+	glm::vec3 getCharColor(char c);
+	unsigned int getDuplePosition(std::string duple);
 public:
 	RubickCube();
     RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram);
-	void generateSolvedCube();
+	void restartCube();
 	void generateCube();
-	std::vector<glm::vec3> generarColoresSegunPos();
-	void setCuboString(std::string cuboString);
+	void setColors(std::string colors);
 	void setOffset(GLfloat offset);
-    RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram, std::string colors="UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB");
 	void Draw();
 	void Solve();
     ~RubickCube();
