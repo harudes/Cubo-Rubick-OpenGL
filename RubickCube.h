@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "Cube.h"
+#include <iostream>
 
 class RubickCube{
 private:
@@ -25,6 +26,7 @@ public:
 	std::vector<glm::vec3> generarColoresSegunPos();
 	void setCuboString(std::string cuboString);
 	void setOffset(GLfloat offset);
+    RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram, std::string colors="UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB");
 	void Draw();
 	void Solve();
     ~RubickCube();

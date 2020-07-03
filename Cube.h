@@ -17,6 +17,8 @@ class Cube{
 	unsigned int shaderProgram, VAO, VBOs[2], EBO, vertexNum, indexNum;
 	int *indices;
 	void init();
+	glm::mat4 model;
+	GLuint modelPos;
 public:
 	Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program);
 	Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, GLuint program);
