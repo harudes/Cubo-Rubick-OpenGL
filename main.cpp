@@ -6,7 +6,7 @@
 
 #include <iostream>
 #include "RubickCube.h"
-
+#include "AKube.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -19,6 +19,7 @@ centerZ = 0.0f;
 GLfloat arista = 0.5; //tamaño de la arista de los cubitos
 GLfloat offset = 0.05;//tamaño de la distancia entre cubos
 GLuint shader;
+bool solvedCube = true;
 RubickCube* cuboRubick;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -125,7 +126,7 @@ int main()
 	//~~~~~~~~~~~~~~~~ CREATE THE RUBICK'S CUBE~~~~~~~~~~~~~~~~~~	
 	shader = shaderProgram;
 	cuboRubick = new RubickCube(glm::vec3(centerX,centerY,centerZ), arista, offset, shader);
-
+	cuboRubick->generateSolvedCube();
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -201,7 +202,24 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 		if (offset < 0.1) offset = 0.2;
 		else offset = 0.05;
-		cuboRubick = new RubickCube(glm::vec3(centerX, centerY, centerZ), arista, offset, shader);
+		cuboRubick->setOffset(offset);
+		if(solvedCube)cuboRubick->generateSolvedCube();
+		else cuboRubick->generateCube();
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+		cuboRubick->generateSolvedCube();
+		solvedCube = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
+		//~~~~~~~~~~~~~~~~ OBTAINING RUBBICKS DISORDERED ~~~~~~~~~~~~~~~~~~	
+		std::string data = GetData();
+		std::string cubo = get_cubo(data);
+		std::vector<std::string> solution = get_solution(data);
+		//std::string cubo = "BBRUUUFBDBLURRURDLLLLLFBBLFUDDBDRRFDDFUDLFBDLFURRBFFRU";
+		cuboRubick->setCuboString(cubo);
+		cuboRubick->generateCube();
+		solvedCube = false;
 	}
 
 	cameraEye = glm::mat3(rotation) * cameraEye;
