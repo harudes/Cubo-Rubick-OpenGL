@@ -20,10 +20,12 @@ class Cube{
 	void init();
 	glm::mat4 model;
 	GLuint modelPos;
+	glm::vec3 cubeCenter;
 public:
 	Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program);
 	Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, GLuint program);
 	void draw();
 	void rotate(GLfloat angle, int axis);
+	void moveAway(glm::vec3 center, float distance);
     ~Cube();
 };

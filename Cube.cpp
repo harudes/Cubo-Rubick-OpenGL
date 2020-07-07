@@ -8,7 +8,7 @@ Cube::Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program) :vertex
 //El segundo parametro es un GLfloat, la longitud de las aristas
 //El tercer parametro es un vector de 6 vec3, que representan los colores de cada cara, tengo algunos defines con los colores del cubo
 //El cuarto parametro es el programa, por si en algun momento usamos diferentes shaders
-Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, GLuint program) :vertexNum(24),indexNum(36),shaderProgram(program) {
+Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, GLuint program) :vertexNum(24),indexNum(36),shaderProgram(program),cubeCenter(center) {
 
 	model = glm::mat4(1.0);
 
@@ -119,6 +119,7 @@ void Cube::rotate(GLfloat angle, int axis) {
 		break;
 	}
 	model = glm::rotate(glm::mat4(1.0f), angle, direction)* model;
+	cubeCenter = glm::mat3(glm::rotate(glm::mat4(1.0f), angle, direction)) * cubeCenter;
 }
 
 void Cube::init() {
@@ -146,6 +147,17 @@ void Cube::init() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indexNum, indices, GL_STATIC_DRAW);
 
 	//glBindVertexArray(0);
+}
+
+void Cube::moveAway(glm::vec3 center, float distance) {
+	glm::vec3 direction = cubeCenter - center;
+	float normal = sqrt(pow(direction.x,2) + pow(direction.y,2) + pow(direction.z,2));
+	direction.x = direction.x / normal;
+	direction.y = direction.y / normal;
+	direction.z = direction.z / normal;
+	model = glm::translate(glm::mat4(1.0), direction * distance) * model;
+
+	cubeCenter = glm::mat3(glm::translate(glm::mat4(1.0), direction * distance)) * cubeCenter;
 }
 
 Cube::~Cube(){

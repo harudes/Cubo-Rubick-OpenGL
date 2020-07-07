@@ -7,9 +7,11 @@
 #include <iostream>
 #include "RubickCube.h"
 #include "AKube.h"
+#include "AllCube/random.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 //~~~~~~~~~~~~~~~~ GLOBAL VARIABLES OF THE RUBICK'S CUBE~~~~~~~~~~~~~~~~~~
@@ -84,6 +86,7 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -129,14 +132,27 @@ int main()
 	cuboRubick = new RubickCube(glm::vec3(centerX,centerY,centerZ), arista, offset, shader);
 	cuboRubick->generateCube();
 	
+	/*string randomCube = randomize();
+
+	cout << randomCube << endl;*/
 
 	glEnable(GL_DEPTH_TEST);
 
+	float time;
+	glfwSetTime(0);
+	float frameRate = 1.0f / 60.0f;
+
 	while (!glfwWindowShouldClose(window))
-	{
+	{	
+		time = glfwGetTime();
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		if (time > frameRate) {
+			cuboRubick->movement();
+			glfwSetTime(0);
+		}
+		
 		cuboRubick->Draw();
 
 		glfwSwapBuffers(window);
@@ -223,17 +239,57 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		std::vector<std::string> solution = get_solution(data);
 		cuboRubick->setColors(cubo);
 		cuboRubick->generateCube();
+		cuboRubick->Solve(solution);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		cuboRubick->movement("U");
+		cuboRubick->setAnimation("R");
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		cuboRubick->movement("U\'");
+		cuboRubick->setAnimation("L");
+	}
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		cuboRubick->setAnimation("U");
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		cuboRubick->setAnimation("D");
+	}
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+		cuboRubick->setAnimation("F");
+	}
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+		cuboRubick->setAnimation("B");
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS) {
+		cuboRubick->expand(0.1f);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS) {
+		cuboRubick->expand(-0.1f);
 	}
 
 	cameraEye = glm::mat3(rotation) * cameraEye;
 	cameraUp = glm::mat3(rotation) * cameraUp;
 
+	modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
+	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	glm::vec3 direction = cameraCenter - cameraEye;
+	GLfloat normal = sqrt(pow(direction.x, 2) + pow(direction.y, 2) + pow(direction.z, 2));
+	direction.x /= normal * 3;
+	direction.y /= normal * 3;
+	direction.z /= normal * 3;
+	if (yoffset > 0) {
+		if (abs(cameraEye.x) > 0.5 || abs(cameraEye.y) > 0.5 || abs(cameraEye.z) > 0.5)
+		cameraEye += direction;
+	}
+	else {
+		if (abs(cameraEye.x) < 30.0 || abs(cameraEye.y) < 30.0 || abs(cameraEye.z) < 30.0)
+		cameraEye -= direction;
+	}
 	modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
 	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
 }

@@ -5,7 +5,7 @@ RubickCube::RubickCube() {}
 /*
 Parametros de entrada:
 	GLfloat centerX
-	GLfloatcenterY
+	GLfloat centerY
 	GLfloat centerZ
 	GLfloat arista  //tamaño de la arista de los cubitos
 	GLfloat offset //tamaño de la distancia entre cubos
@@ -13,7 +13,7 @@ Parametros de entrada:
 
 Genera un array de cubitos
 */
-RubickCube::RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram) :cubitos(27, nullptr) {
+RubickCube::RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram) :cubitos(27, nullptr), animating(false), animationCounter(0), animationTime(30){
 	this->centerX = center.x;
 	this->centerY = center.y;
 	this->centerZ = center.z;
@@ -107,7 +107,7 @@ void RubickCube::generateCube(){
 
 	cubitos[15] = new Cube(glm::vec3((centerX + arista + offset), (centerY + arista + offset), (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U9")]),BLACK,getCharColor(colors[getDuplePosition("R1")]),BLACK,getCharColor(colors[getDuplePosition("F3")]) }, shaderProgram);//F3,U9,R1
 	cubitos[16] = new Cube(glm::vec3(centerX, (centerY + arista + offset), (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U6")]),BLACK,getCharColor(colors[getDuplePosition("R2")]),BLACK,BLACK }, shaderProgram);//R2, U8
-	cubitos[17] = new Cube(glm::vec3((centerX - arista - offset), (centerY + arista + offset), (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U3")]),BLACK,getCharColor(colors[getDuplePosition("R3")]),getCharColor(colors[getDuplePosition("B1")]),BLACK }, shaderProgram);//R3, B1, U7																																								 																						
+	cubitos[17] = new Cube(glm::vec3((centerX - arista - offset), (centerY + arista + offset), (centerZ + arista + offset)), arista, { BLACK,getCharColor(colors[getDuplePosition("U3")]),BLACK,getCharColor(colors[getDuplePosition("R3")]),getCharColor(colors[getDuplePosition("B1")]),BLACK }, shaderProgram);//R3, B1, U3
 																																															 
 					
 
@@ -141,25 +141,170 @@ void RubickCube::Draw() {
 	}
 }
 
-void RubickCube::movement(std::string move) {
-	std::vector<int> sideCubes;
-	int axis;
-	GLfloat angle = glm::pi<float>() / 60;
-	switch (move[0]) {
+void RubickCube::addCenters(std::vector<int> &indices) {
+	switch (actualAnimation[0]) {
 	case 'U':
-		sideCubes = { 11, 14, 17, 10, 13, 16, 9, 12, 15 };
-		axis = 2;
-		if (move.length() == 2 && move[1] == '\'')
-			angle *= -1;
+		indices.push_back(13);
+		break;
+	case 'D':
+		indices.push_back(22);
+		break;
+	case 'R':
+		indices.push_back(7);
+		break;
+	case 'L':
+		indices.push_back(4);
+		break;
+	case 'F':
+		indices.push_back(0);
+		break;
+	case 'B':
+		indices.push_back(2);
 		break;
 	}
+}
+
+std::vector<int> RubickCube::getSideIndices() {
+	std::vector<int> sideCubes;
+	switch (actualAnimation[0]) {
+	case 'U':
+		sideCubes = CUBE_UP;
+		break;
+	case 'D':
+		sideCubes = CUBE_DOWN;
+		break;
+	case 'R':
+		sideCubes = CUBE_RIGHT;
+		break;
+	case 'L':
+		sideCubes = CUBE_LEFT;
+		break;
+	case 'F':
+		sideCubes = CUBE_FRONT;
+		break;
+	case 'B':
+		sideCubes = CUBE_BACK;
+		break;
+	}
+	return sideCubes;
+}
+
+GLfloat RubickCube::getSideAngle() {
+	float angle;
+	switch (actualAnimation[0]) {
+	case 'U':
+		angle = -1.0;
+		break;
+	case 'D':
+		angle = 1.0;
+		break;
+	case 'R':
+		angle = -1.0;
+		break;
+	case 'L':
+		angle = 1.0;
+		break;
+	case 'F':
+		angle = -1.0;
+		break;
+	case 'B':
+		angle = 1.0;
+		break;
+	}
+	return angle;
+}
+
+void RubickCube::move() {
+	std::vector<int> sideCubes = getSideIndices();
+	addCenters(sideCubes);
+	int axis;
+	GLfloat angle = getSideAngle();
+	angle *= glm::pi<float>() / 60;
+	switch (actualAnimation[0]) {
+	case 'U':
+		axis = 2;
+		break;
+	case 'D':
+		axis = 2;
+		break;
+	case 'R':
+		axis = 1;
+		break;
+	case 'L':
+		axis = 1;
+		break;
+	case 'F':
+		axis = 0;
+		break;
+	case 'B':
+		axis = 0;
+		break;
+	}
+	if (actualAnimation.length() == 2 && actualAnimation[1] == '\'')
+		angle *= -1;
 	for (int i : sideCubes) {
 		cubitos[i]->rotate(angle, axis);
 	}
 }
 
-void RubickCube::Solve() {
+void RubickCube::updateIndex() {
+	int offset = 6;
+	if (actualAnimation.length() == 2 && actualAnimation[1] == '\'')
+		offset = 2;
+	if (actualAnimation.length() == 2 && actualAnimation[1] == '2')
+		offset = 4;
 
+	std::vector<int> sideCubes = getSideIndices();
+	std::vector<Cube*> originalCubitos = cubitos;
+	for (std::size_t i = 0, top= sideCubes.size(); i < top; ++i) {
+		cubitos[sideCubes[i]] = originalCubitos[sideCubes[(i+offset)%top]];
+	}
+}
+
+void RubickCube::movement() {
+	if (!solutionQueue.empty()) {
+		if (!animating) {
+			actualAnimation = solutionQueue.front();
+			setAnimation(actualAnimation);
+			solutionQueue.pop();
+		}
+	}
+	if (animationCounter == animationTime) {
+		animating = false;
+		updateIndex();
+		animationCounter++;
+	}
+	if (animating) {
+		move();
+		animationCounter++;
+	}
+}
+
+bool RubickCube::setAnimation(std::string move) {
+	if (!animating) {
+		actualAnimation = move;
+		animating = true;
+		animationCounter = 0;
+		if (actualAnimation.length() == 2 && actualAnimation[1] == '2')
+			animationTime = 60;
+		else
+			animationTime = 30;
+		return true;
+	}
+	return false;
+}
+
+void RubickCube::Solve(std::vector<std::string> solution) {
+	for (std::string move : solution) {
+		solutionQueue.push(move);
+	}
+}
+
+void RubickCube::expand(float distance) {
+	for (Cube* cubito : cubitos) {
+		if(cubito != cubitos[1])
+		cubito->moveAway(glm::vec3(centerX,centerY,centerZ), distance);
+	}
 }
 
 RubickCube::~RubickCube(){
