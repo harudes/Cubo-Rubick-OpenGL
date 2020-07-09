@@ -65,9 +65,9 @@ El siguiente diagrama muestra el orden de las caretas:
 Si tu profesor se pone muy especial con el hecho de que la librería a usar para la generación y resolución de un cubo de Rubik, debe ser local. `AllCube` contiene todos los archivos necesarios para tener `AKube.h` de forma local. Tiene las mismas funciones que `AKube.h`, solo que la sintáxis es diferente.
 ```c++
 #include<iostream>
-#include "solve.h"//Incluimos la librería que resuelve un cubo
+#include "AllCube/solve.h"//Incluimos la librería que resuelve un cubo
 #include<string>
-#include "random.h"//Incluimos la librería que genera un cubo random
+#include "AllCube/random.h"//Incluimos la librería que genera un cubo random
 
 int main() {
 	std::string Cubo = randomize(); //Obtenemos un cubo random -> "UUU...R...F..D..L..B.."
