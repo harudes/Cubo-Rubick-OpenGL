@@ -4,6 +4,7 @@
 #include "search.h"
 #include "solve.h"
 #include <string>
+#include <vector>
 #pragma warning(disable:4996)
 
 std::string solver(char* cube) {
@@ -23,11 +24,23 @@ std::string solver(char* cube) {
     return answer;
 }
 
-std::string get_solution(std::string Cube) {
+std::vector<std::string> get_solution(std::string Cube) {
     char* cube = new char[(int)Cube.size()];
     for (int i = 0; i < (int)Cube.size(); ++i) {
         cube[i] = Cube[i];
     }
     std::string solution = solver(cube);
-    return solution;
+    std::vector<std::string> the_solution;
+    std::string temp = "";
+    for (int i = 0; i < (int)solution.size(); ++i) {
+        if (solution[i] == ' ') {
+            the_solution.push_back(temp);
+            temp = "";
+        }
+        else {
+            temp.push_back(solution[i]);
+        }
+    }
+    if((int)temp.size())the_solution.push_back(temp);
+    return the_solution;
 }

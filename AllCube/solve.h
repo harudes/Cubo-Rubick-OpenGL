@@ -4,5 +4,6 @@
 #include <stdlib.h>
 #include "search.h"
 #include <string>
+#include<vector>
 std::string solver(char* cube);
-std::string get_solution(std::string Cube);
+std::vector<std::string> get_solution(std::string Cube);
