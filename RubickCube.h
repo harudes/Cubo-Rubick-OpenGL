@@ -14,6 +14,7 @@
 #define CUBE_FRONT {9, 12, 15, 6, 24, 21, 18, 3}
 #define CUBE_BACK {17, 14, 11, 5, 20, 23, 26, 8}
 
+#define nullTexture {glm::vec2(0.0,0.0),glm::vec2(0.1,0.0),glm::vec2(0.0,0.1),glm::vec2(0.1,0.1)}
 
 class RubickCube{
 private:
@@ -30,7 +31,9 @@ private:
 	GLfloat arista;
 	GLfloat offset;
 	GLuint shaderProgram;
+	unsigned int texture;
 
+	std::vector<glm::vec2> getTextureCoords(std::vector<glm::vec3> colors, std::vector<int> sidePos);
 	std::string colors;
 	glm::vec3 getCharColor(char c);
 	unsigned int getDuplePosition(std::string duple);
@@ -41,7 +44,7 @@ private:
 	void updateIndex();
 public:
 	RubickCube();
-    RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram);
+    RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram, unsigned int textureNum);
 	void restartCube();
 	void generateCube();
 	void setColors(std::string colors);

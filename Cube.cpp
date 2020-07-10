@@ -8,7 +8,7 @@ Cube::Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program) :vertex
 //El segundo parametro es un GLfloat, la longitud de las aristas
 //El tercer parametro es un vector de 6 vec3, que representan los colores de cada cara, tengo algunos defines con los colores del cubo
 //El cuarto parametro es el programa, por si en algun momento usamos diferentes shaders
-Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, GLuint program) :vertexNum(24),indexNum(36),shaderProgram(program),cubeCenter(center) {
+Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, std::vector<glm::vec2> textCoords, GLuint program, unsigned int textureNum) :vertexNum(24),indexNum(36),shaderProgram(program),cubeCenter(center), texture(textureNum) {
 
 	model = glm::mat4(1.0);
 
@@ -19,6 +19,8 @@ Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, 
 	vertices = new GLfloat[72];
 
 	vertexColors = new GLfloat[72];
+
+	textureCoords = new GLfloat[48];
 
 	indices = new int[36];
 
@@ -82,23 +84,51 @@ Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, 
 		vertices[i * 2 + 1] = newVertices[i * 2 + 1];
 	}
 
-	for (int i = 0; i < 72; i+=3) {
+	for (int i = 0; i < 72; i += 3) {
 		vertexColors[i] = colors[i / 12].x;
-		vertexColors[i+1] = colors[i / 12].y;
-		vertexColors[i+2] = colors[i / 12].z;
+		vertexColors[i + 1] = colors[i / 12].y;
+		vertexColors[i + 2] = colors[i / 12].z;
+	}
+
+	for (int i = 0; i < 24; ++i) {
+		textureCoords[i * 2] = textCoords[i].x;
+		textureCoords[i * 2 + 1] = textCoords[i].y;
+		/*switch (i % 4) {
+		case 0:
+			textureCoords[i * 2] = 0.0;
+			textureCoords[i * 2 + 1] = 0.0;
+			break;
+		case 1:
+			textureCoords[i * 2] = 0.0;
+			textureCoords[i * 2 + 1] = 1.0/3;
+			break;
+		case 2:
+			textureCoords[i * 2] = 1.0/6/3;
+			textureCoords[i * 2 + 1] = 1.0/3;
+			break;
+		case 3:
+			textureCoords[i * 2] = 1.0/6/3;
+			textureCoords[i * 2 + 1] = 0.0;
+			break;
+		}*/
 	}
 
 	init();
+
+	delete vertices;
+	delete vertexColors;
+	delete indices;
 }
 
 void Cube::draw() {
 
+	
+
 	glBindVertexArray(VAO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertexNum * 3, vertices, GL_STATIC_DRAW);
-
 	glUseProgram(shaderProgram);
+
+	//glBindTexture(GL_TEXTURE_2D, texture);
 
 	glUniformMatrix4fv(modelPos, 1, GL_FALSE, &model[0][0]);
 
@@ -126,7 +156,7 @@ void Cube::init() {
 
 
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(2, VBOs);
+	glGenBuffers(3, VBOs);
 	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
@@ -142,6 +172,12 @@ void Cube::init() {
 
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOs[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords[0]) * vertexNum * 2, textureCoords, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void*)0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indexNum, indices, GL_STATIC_DRAW);
@@ -165,6 +201,6 @@ Cube::~Cube(){
 	delete vertexColors;
 	delete indices;
 	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(2, VBOs);
+	glDeleteBuffers(3, VBOs);
 	glDeleteBuffers(1, &EBO);
 }

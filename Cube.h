@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+#include <iostream>
 
 #define RED glm::vec3(1.0,0.0,0.0)
 #define GREEN glm::vec3(0.0,1.0,0.0)
@@ -14,8 +15,8 @@
 #define BLACK glm::vec3(0.0,0.0,0.3)
 
 class Cube{
-	GLfloat *vertices, *vertexColors;
-	unsigned int shaderProgram, VAO, VBOs[2], EBO, vertexNum, indexNum;
+	GLfloat *vertices, *vertexColors, *textureCoords;
+	unsigned int shaderProgram, texture, VAO, VBOs[3], EBO, vertexNum, indexNum;
 	int *indices;
 	void init();
 	glm::mat4 model;
@@ -23,7 +24,7 @@ class Cube{
 	glm::vec3 cubeCenter;
 public:
 	Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program);
-	Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, GLuint program);
+	Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, std::vector<glm::vec2> textCoords, GLuint program, unsigned int textureNum);
 	void draw();
 	void rotate(GLfloat angle, int axis);
 	void moveAway(glm::vec3 center, float distance);

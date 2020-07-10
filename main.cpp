@@ -7,7 +7,7 @@
 #include <iostream>
 #include "RubickCube.h"
 #include "AKube.h"
-#include "AllCube/random.h"
+#include "stb_image.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -47,7 +47,9 @@ const unsigned int SCR_HEIGHT = 500;
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 position;\n"
 "layout (location = 1) in vec3 color;\n"
+"layout (location = 2) in vec2 aTexCoord;\n"
 "out vec3 Color;\n"
+"out vec2 TexCoord;\n"
 "uniform mat4 model;\n"
 "uniform mat4 view;\n"
 "uniform mat4 projection;\n"
@@ -55,18 +57,22 @@ const char* vertexShaderSource = "#version 330 core\n"
 "{\n"
 "   gl_Position = projection * view * model * vec4(position, 1.0f);\n"
 "	Color = color;\n"
+"	TexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
 "}\n\0";
 
 const char* fragmentShaderSource = "#version 330 core\n"
 "in vec3 Color;\n"
+"in vec2 TexCoord;\n"
 "out vec4 fragColor;\n"
+"uniform sampler2D texture1;\n"
 "void main(void)\n"
 "{\n"
-"   fragColor = vec4(Color, 1.0f);\n"
+"   fragColor = texture(texture1, TexCoord) * vec4(Color, 1.0f);\n"
 "}\n\0";
 
 int main()
 {
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -126,10 +132,39 @@ int main()
 	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
 
 
+	//~~~~~~~~~~~~~~~~ CREATE THE TEXTURE ~~~~~~~~~~~~~~~~~~~~~~~
+
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image, create texture and generate mipmaps
+	int width, height, nrChannels;
+	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+	unsigned char *data = stbi_load("C://Users//luisf//Pictures//CuboRubik.png", &width, &height, &nrChannels, 0);
+	//unsigned char *data = stbi_load("C://Users//luisf//Pictures//base UCSP.png", &width, &height, &nrChannels, 0);
+	//unsigned char *data = stbi_load("C://Users//luisf//Pictures//ov6ds6za7s951.jpg", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+	
+
 	//~~~~~~~~~~~~~~~~ CREATE THE RUBICK'S CUBE~~~~~~~~~~~~~~~~~~	
 	shader = shaderProgram;
 	
-	cuboRubick = new RubickCube(glm::vec3(centerX,centerY,centerZ), arista, offset, shader);
+	cuboRubick = new RubickCube(glm::vec3(centerX,centerY,centerZ), arista, offset, shader, texture);
 	cuboRubick->generateCube();
 	
 	/*string randomCube = randomize();
