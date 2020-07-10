@@ -67,13 +67,15 @@ Si tu profesor se pone muy especial con el hecho de que la librería a usar para
 #include<iostream>
 #include "AllCube/solve.h"//Incluimos la librería que resuelve un cubo
 #include<string>
+#include<vector>
 #include "AllCube/random.h"//Incluimos la librería que genera un cubo random
 
 int main() {
 	std::string Cubo = randomize(); //Obtenemos un cubo random -> "UUU...R...F..D..L..B.."
 	std::cout << Cubo << std::endl; 
-	std::string solution = get_solution(Cubo); //Obtenemos la solución de un cubo dado -> ["F","R2",..,"B'"]
+	std::vector<std::string> solution = get_solution(Cubo); //Obtenemos la solución de un cubo dado -> ["F","R2",..,"B'"]
 	std::cout << solution << std::endl;
 }
 ```
 La notación y codificación es exactamente la misma que `AKube.h`
+# Advertencia ! no usar Akube.h y AllCube juntos, comparten ciertas definiciones que juntas provocan errores de conflicto
