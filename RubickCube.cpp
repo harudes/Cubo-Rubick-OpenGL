@@ -49,7 +49,6 @@ GLfloat getColorOffset(glm::vec3 color) {
 	else if (color == GREEN) {
 		offset = letterSize * 5;
 	}
-	std::cout << offset << std::endl;
 	return offset;
 }
 
@@ -70,7 +69,6 @@ std::vector<glm::vec2> RubickCube::getTextureCoords(std::vector<glm::vec3> color
 			offset = getPositionOffset(sidePos[i]);
 			offsetX += offset.x;
 			offsetY += offset.y;
-			std::cout << offsetX << " " << offsetY << std::endl;
 			coords.push_back(glm::vec2(offsetX, offsetY + letterOffset * 6));
 			coords.push_back(glm::vec2(offsetX, offsetY ));
 			coords.push_back(glm::vec2(offsetX + letterOffset, offsetY ));
@@ -84,7 +82,6 @@ std::vector<glm::vec2> RubickCube::getTextureCoords(std::vector<glm::vec3> color
 		}
 		
 	}
-	std::cout << std::endl;
 	return coords;
 }
 
@@ -172,7 +169,6 @@ void RubickCube::generateCube(){
 	cubitos[8] = new Cube(glm::vec3((centerX - arista - offset), (centerY + arista + offset), centerZ), arista, auxColors, getTextureCoords(auxColors, { 0,0,0,6,4,0 }), shaderProgram, texture);//R6, B4
 
 
-	std::cout << "^~~~~~~~~~~~~~~~~~~~~~~~~~+" << std::endl;
 	updateColors(auxColors, { BLACK,getCharColor(colors[getDuplePosition("U7")]),getCharColor(colors[getDuplePosition("L3")]),BLACK,BLACK,getCharColor(colors[getDuplePosition("F1")]) });																																						 //---
 	cubitos[9] = new Cube(glm::vec3((centerX + arista + offset), (centerY - arista - offset), (centerZ + arista + offset)), arista, auxColors, getTextureCoords(auxColors, { 0,7,3,0,0,1 }), shaderProgram, texture);//F1, L3, U7
 	updateColors(auxColors, { BLACK,getCharColor(colors[getDuplePosition("U4")]),getCharColor(colors[getDuplePosition("L2")]),BLACK,BLACK,BLACK });
@@ -213,7 +209,7 @@ void RubickCube::generateCube(){
 	updateColors(auxColors, { getCharColor(colors[getDuplePosition("D3")]),BLACK,BLACK,getCharColor(colors[getDuplePosition("R7")]),BLACK,getCharColor(colors[getDuplePosition("F9")]) });
 	cubitos[24] = new Cube(glm::vec3((centerX + arista + offset), (centerY + arista + offset), (centerZ - arista - offset)), arista, auxColors, getTextureCoords(auxColors, { 3,0,0,7,0,9 }), shaderProgram, texture);//F9, R7, D3
 	updateColors(auxColors, { getCharColor(colors[getDuplePosition("D6")]),BLACK,BLACK,getCharColor(colors[getDuplePosition("R8")]),BLACK,BLACK });
-	cubitos[25] = new Cube(glm::vec3(centerX, (centerY + arista + offset), (centerZ - arista - offset)), arista, auxColors, getTextureCoords(auxColors, {6,0,0,0,8,0,0 }), shaderProgram, texture);//D6, R8
+	cubitos[25] = new Cube(glm::vec3(centerX, (centerY + arista + offset), (centerZ - arista - offset)), arista, auxColors, getTextureCoords(auxColors, {6,0,0,8,0,0 }), shaderProgram, texture);//D6, R8
 	updateColors(auxColors, { getCharColor(colors[getDuplePosition("D9")]),BLACK,BLACK,getCharColor(colors[getDuplePosition("R9")]),getCharColor(colors[getDuplePosition("B7")]),BLACK });
 	cubitos[26] = new Cube(glm::vec3((centerX - arista - offset), (centerY + arista + offset), (centerZ - arista - offset)), arista, auxColors, getTextureCoords(auxColors, { 9,0,0,9,7,0 }), shaderProgram, texture);//R9, B7, D1
 

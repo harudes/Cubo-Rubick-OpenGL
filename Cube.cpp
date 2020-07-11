@@ -30,25 +30,25 @@ Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, 
 		center.x + side, center.y + side, center.z - side,
 		center.x - side, center.y + side, center.z - side,
 
+		center.x + side, center.y - side, center.z + side,
 		center.x - side, center.y - side, center.z + side,
 		center.x - side, center.y + side, center.z + side,
 		center.x + side, center.y + side, center.z + side,
-		center.x + side, center.y - side, center.z + side,
-
+		
 		center.x - side, center.y - side, center.z - side,
+		center.x - side, center.y - side, center.z + side,
+		center.x + side, center.y - side, center.z + side,
 		center.x + side, center.y - side, center.z - side,
-		center.x + side, center.y - side, center.z + side,
-		center.x - side, center.y - side, center.z + side,
 
-		center.x - side, center.y + side, center.z - side,
-		center.x - side, center.y + side, center.z + side,
-		center.x + side, center.y + side, center.z + side,
 		center.x + side, center.y + side, center.z - side,
+		center.x + side, center.y + side, center.z + side,
+		center.x - side, center.y + side, center.z + side,
+		center.x - side, center.y + side, center.z - side,
 
-		center.x - side, center.y - side, center.z - side,
 		center.x - side, center.y + side, center.z - side,
 		center.x - side, center.y + side, center.z + side,
 		center.x - side, center.y - side, center.z + side,
+		center.x - side, center.y - side, center.z - side,		
 
 		center.x + side, center.y - side, center.z - side,
 		center.x + side, center.y - side, center.z + side,
@@ -128,7 +128,7 @@ void Cube::draw() {
 
 	glUseProgram(shaderProgram);
 
-	//glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glUniformMatrix4fv(modelPos, 1, GL_FALSE, &model[0][0]);
 

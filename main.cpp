@@ -14,6 +14,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
+string imgRoute = "";
+
 //~~~~~~~~~~~~~~~~ GLOBAL VARIABLES OF THE RUBICK'S CUBE~~~~~~~~~~~~~~~~~~
 GLfloat centerX = 0.0f,
 centerY = 0.0f,
@@ -70,8 +72,19 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "   fragColor = texture(texture1, TexCoord) * vec4(Color, 1.0f);\n"
 "}\n\0";
 
-int main()
+int main(int agrc, char* argv[])
 {
+	string route = argv[0];
+	if (route == "C:\\Users\\luisf\\Desktop\\Grafica\\GLFW_GLAD_GLUT_GLEW_cmake_project\\build\\mak.vc15\\x64\\src\\Final\\Debug\\Final.exe") {//Ruta de Luis
+		imgRoute = "C://Users//luisf//Desktop//Grafica//Cubo-Rubick-OpenGL//CuboRubik.png";//Ruta de la textura
+	}
+	else if (route == "") {
+		imgRoute = "";
+	}
+	else if(route==""){
+		imgRoute = "";
+	}
+
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -145,8 +158,9 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// load image, create texture and generate mipmaps
 	int width, height, nrChannels;
+	//stbi_set_flip_vertically_on_load(true);
 	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-	unsigned char *data = stbi_load("C://Users//luisf//Pictures//CuboRubik.png", &width, &height, &nrChannels, 0);
+	unsigned char *data = stbi_load(imgRoute.c_str(), &width, &height, &nrChannels, 0);
 	//unsigned char *data = stbi_load("C://Users//luisf//Pictures//base UCSP.png", &width, &height, &nrChannels, 0);
 	//unsigned char *data = stbi_load("C://Users//luisf//Pictures//ov6ds6za7s951.jpg", &width, &height, &nrChannels, 0);
 	if (data)
