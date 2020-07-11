@@ -600,6 +600,22 @@ std::string codificar(char R[6][3][3]) {
 	return Cube;
 }
 
+std::string to_cube_not(std::vector<std::string> moves) {
+	char R[6][3][3];
+	for (int i = 0; i < 6; ++i) {
+		//Tratar cara i
+		if (i == 0)cara0(R[i][0]);
+		if (i == 1)cara1(R[i][0]);
+		if (i == 2)cara2(R[i][0]);
+		if (i == 3)cara3(R[i][0]);
+		if (i == 4)cara4(R[i][0]);
+		if (i == 5)cara5(R[i][0]);
+	}
+	moving(R, moves);
+	std::string s = codificar(R);
+	return s;
+}
+
 std::string randomize() {
 	srand(time(0));
 	char R[6][3][3];

@@ -26,5 +26,5 @@ void moving(char R[6][3][3], vector<string> moves);
 
 std::string reverse(char R[6][3][3], int f);
 std::string codificar(char R[6][3][3]);
-
+std::string to_cube_not(std::vector<std::string> moves);
 std::string randomize();
