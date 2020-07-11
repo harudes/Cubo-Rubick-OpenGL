@@ -77,5 +77,11 @@ int main() {
 	std::cout << solution << std::endl;
 }
 ```
+Por otro lado si se desea controlar aún más el cubo, se puede recurrir a obtener los movimientos originales que desordenan al cubo. Para la resolución se deberá usar otra funciones que conviertan los movimientos a la notación de cubo usada.
+```c++
+std::vector<std::string> moves = scramble(Nr_of_movements);//Obtenemos movimientos para el cubo random -> ["R","D2",..,"F'"]
+std::string Cubo = to_cube_not(moves); //Obtenemos un cubo random basado en los movimientos dados -> "UUU...R...F..D..L..B.."
+std::vector<std::string> solution = get_solution(Cubo); //Obtenemos la solución de un cubo dado -> ["F","R2",..,"B'"]
+```
 La notación y codificación es exactamente la misma que `AKube.h`
 # Advertencia ! no usar Akube.h y AllCube juntos, comparten ciertas definiciones que juntas provocan errores de conflicto
