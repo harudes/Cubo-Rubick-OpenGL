@@ -15,6 +15,7 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+void printComands();
 
 string imgRoute = "";
 
@@ -76,15 +77,16 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 int main(int agrc, char* argv[])
 {
+	printComands();
 	string route = argv[0];
-	if (route == "C:\\Users\\luisf\\Desktop\\Grafica\\GLFW_GLAD_GLUT_GLEW_cmake_project\\build\\mak.vc15\\x64\\src\\Final\\Debug\\Final.exe") {//Ruta de Luis
+	if (route == "C:\\Users\\luisf\\Desktop\\Grafica\\GLFW_GLAD_GLUT_GLEW_cmake_project\\build\\mak.vc15\\x64\\src\\Final\\Debug\\Final.exe") {//Ruta de ejecutable
 		imgRoute = "C://Users//luisf//Desktop//Grafica//Cubo-Rubick-OpenGL//CuboRubik.png";//Ruta de la textura
 	}
 	else if (route == "") {
 		imgRoute = "D:/Documentos/Semestre 2020-1/Computacion_Grafica/Material Entregado/GLFW_GLAD_GLUT_GLEW_cmake_project/src/Cubo11/CuboRubik.png";
 	}
-	imgRoute = "D:/Documentos/Semestre 2020-1/Computacion_Grafica/Material Entregado/GLFW_GLAD_GLUT_GLEW_cmake_project/src/Cubo11/CuboRubik.png";
-
+	else
+		imgRoute = "C://Users//luisf//Desktop//Grafica//Cubo-Rubick-OpenGL//CuboRubik.png";
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -351,4 +353,26 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	}
 	modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
 	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
+}
+
+void printComands() {
+	std::cout << std::endl << std::endl;
+	std::cout << "|----------------------------------------------------------------------------------------------------------|" << std::endl;
+	std::cout << "|----------------------------------------------------------------------------------------------------------|" << std::endl;
+	std::cout << "|Presione la tecla T para generar un cubo aleatorio y que se resuelva automaticamente                      |" << std::endl;
+	std::cout << "|Presione la tecla L para desordenar el cubo por pasos                                                     |" << std::endl;
+	std::cout << "|Presione la tecla P para armar el cubo generado por la tecla L                                            |" << std::endl;
+	std::cout << "|Presione la tecla W para girar la cara superior en sentido horario                                        |" << std::endl;
+	std::cout << "|Presione la tecla S para girar la cara inferior en sentido horario                                        |" << std::endl;
+	std::cout << "|Presione la tecla A para girar la cara izquierda en sentido horario                                       |" << std::endl;
+	std::cout << "|Presione la tecla D para girar la cara derecha en sentido horario                                         |"<< std::endl;
+	std::cout << "|Presione la tecla Z para girar la cara posterior en sentido horario                                       |" << std::endl;
+	std::cout << "|Presione la tecla X para girar la cara Trasera en sentido horario                                         |" << std::endl;
+	std::cout << "|Presione las flechas direccionales para mover la camara                                                   |" << std::endl;
+	std::cout << "|Presione las teclas + y - para expandir o contraer los cubitos                                            |" << std::endl;
+	std::cout << "|Use la rueda del raton para acercar o alejar la camara                                                    |" << std::endl;
+	std::cout << "|Recuerde actualizar la ruta de la textura                                                                 |" << std::endl;
+	std::cout << "|----------------------------------------------------------------------------------------------------------|" << std::endl;
+	std::cout << "|----------------------------------------------------------------------------------------------------------|" << std::endl;
+	std::cout << std::endl << std::endl;
 }
