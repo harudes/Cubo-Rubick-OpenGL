@@ -23,6 +23,8 @@ private:
 	int animationTime;
 	std::string actualAnimation;
 	std::queue<std::string> solutionQueue;
+	std::queue<std::string> scrambleQueue;
+	std::vector<std::string> temp_moves;
 
 	std::vector<Cube*> cubitos;
 	GLfloat centerX;
@@ -52,7 +54,9 @@ public:
 	void Draw();
 	void movement();
 	void Solve(std::vector<std::string> solution);
+	void Scramble(std::vector<std::string> scramble);
 	void expand(float distance);
 	bool setAnimation(std::string move);
+	std::vector<std::string> get_sol();
     ~RubickCube();
 };

@@ -352,6 +352,13 @@ void RubickCube::updateIndex() {
 }
 
 void RubickCube::movement() {
+	if (!scrambleQueue.empty()) {
+		if (!animating) {
+			actualAnimation = scrambleQueue.front();
+			setAnimation(actualAnimation);
+			scrambleQueue.pop();
+		}
+	}
 	if (!solutionQueue.empty()) {
 		if (!animating) {
 			actualAnimation = solutionQueue.front();
@@ -388,6 +395,17 @@ void RubickCube::Solve(std::vector<std::string> solution) {
 	for (std::string move : solution) {
 		solutionQueue.push(move);
 	}
+}
+
+void RubickCube::Scramble(std::vector<std::string> scramble) {
+	temp_moves = scramble;//Guardo los movimientos para usarlos para resolver
+	for (std::string move : scramble) {
+		scrambleQueue.push(move);
+	}
+}
+
+std::vector<std::string> RubickCube::get_sol() {
+	return temp_moves;
 }
 
 void RubickCube::expand(float distance) {

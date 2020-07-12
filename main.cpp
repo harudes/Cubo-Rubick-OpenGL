@@ -6,7 +6,9 @@
 
 #include <iostream>
 #include "RubickCube.h"
-#include "AKube.h"
+#include "AllCube/random.h"
+#include "AllCube/solve.h"
+//#include "AKube.h"
 #include "stb_image.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h);
@@ -79,12 +81,9 @@ int main(int agrc, char* argv[])
 		imgRoute = "C://Users//luisf//Desktop//Grafica//Cubo-Rubick-OpenGL//CuboRubik.png";//Ruta de la textura
 	}
 	else if (route == "") {
-		imgRoute = "";
+		imgRoute = "D:/Documentos/Semestre 2020-1/Computacion_Grafica/Material Entregado/GLFW_GLAD_GLUT_GLEW_cmake_project/src/Cubo11/CuboRubik.png";
 	}
-	else if(route==""){
-		imgRoute = "";
-	}
-
+	imgRoute = "D:/Documentos/Semestre 2020-1/Computacion_Grafica/Material Entregado/GLFW_GLAD_GLUT_GLEW_cmake_project/src/Cubo11/CuboRubik.png";
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -283,11 +282,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
 		//~~~~~~~~~~~~~~~~ OBTAINING RUBBICKS DISORDERED ~~~~~~~~~~~~~~~~~~	
-		std::string data = GetData();
-		std::string cubo = get_cubo(data);
-		std::vector<std::string> solution = get_solution(data);
+		//std::string data = GetData();
+		//std::string cubo = get_cubo(data);
+		//-----------------------------------------------------------------
+		std::string cubo = randomize();
+		std::vector<std::string> solution = get_solution(cubo);
 		cuboRubick->setColors(cubo);
 		cuboRubick->generateCube();
+		cuboRubick->Solve(solution);
+	}
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+		std::vector<std::string> movements_to_scramble = scramble(15);
+		for (int i = 0; i < (int)movements_to_scramble.size(); ++i)std::cout << movements_to_scramble[i] << 'f'; std::cout << std::endl;
+		cuboRubick->Scramble(movements_to_scramble);
+	}
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+		std::vector<std::string> solution = get_solution(to_cube_not(cuboRubick->get_sol()));
 		cuboRubick->Solve(solution);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
