@@ -19,7 +19,7 @@ std::vector<std::string> scramble(int N_M) {
 	int inputLength = N_M;
 	std::vector<std::string> moves(inputLength);
 	int index = 0;
-	while (i++ < inputLength) {
+	while (i < inputLength) {
 		bool doTwo = false;
 		bool addOne = false;
 		bool ignore = false;
@@ -39,32 +39,32 @@ std::vector<std::string> scramble(int N_M) {
 		turn = setArray[initFirst];
 		r /= 10;
 		if (turn != completedMove) {
-			if (addOne == true && ignore == false) {
+			if (addOne == true && ignore == false && turn != NULL) {
 				if (doTwo == true) {
 					//cout << turn << "2";
 					moves[index].push_back(turn);
-					moves[index].push_back('2'); ++index;
+					moves[index].push_back('2'); ++index; ++i;
 				}
 				else {
 					//cout << turn << "'";
 					moves[index].push_back(turn);
-					moves[index].push_back('\''); ++index;
+					moves[index].push_back('\''); ++index; ++i;
 				}
 			}
-			else if (addOne != true && ignore == false) {
+			else if (addOne != true && ignore == false && turn != NULL) {
 				if (doTwo == true) {
 					//cout << turn << "2";
 					moves[index].push_back(turn);
-					moves[index].push_back('2'); ++index;
+					moves[index].push_back('2'); ++index; ++i;
 				}
 				else {
 					//cout << turn;
-					moves[index].push_back(turn); ++index;
+					moves[index].push_back(turn); ++index; ++i;
 				}
 
 			}
 			if (ignore == false) {
-				//cout << " ";
+				//cout << "x";
 			}
 		}
 
