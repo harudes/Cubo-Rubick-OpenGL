@@ -24,7 +24,7 @@ class Cube{
 	glm::vec3 cubeCenter;
 public:
 	Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program);
-	Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, std::vector<glm::vec2> textCoords, GLuint program, unsigned int textureNum);
+	Cube(glm::vec3 center, glm::vec3 sideLength, std::vector<glm::vec3> colors, std::vector<glm::vec2> textCoords, GLuint program, unsigned int textureNum);
 	void draw();
 	void rotate(GLfloat angle, int axis);
 	void moveAway(glm::vec3 center, float distance);

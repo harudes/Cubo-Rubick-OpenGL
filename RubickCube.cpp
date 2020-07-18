@@ -25,7 +25,8 @@ RubickCube::RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint 
 }
 
 void RubickCube::restartCube() {
-	this->colors = "UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRBBBBBBBBBDDDDDDDDD";
+	//this->colors = "UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRBBBBBBBBBDDDDDDDDD";
+	this->colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 }
 
 GLfloat getColorOffset(glm::vec3 color) {

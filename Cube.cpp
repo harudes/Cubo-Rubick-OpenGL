@@ -8,13 +8,17 @@ Cube::Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program) :vertex
 //El segundo parametro es un GLfloat, la longitud de las aristas
 //El tercer parametro es un vector de 6 vec3, que representan los colores de cada cara, tengo algunos defines con los colores del cubo
 //El cuarto parametro es el programa, por si en algun momento usamos diferentes shaders
-Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, std::vector<glm::vec2> textCoords, GLuint program, unsigned int textureNum) :vertexNum(24),indexNum(36),shaderProgram(program),cubeCenter(center), texture(textureNum) {
+Cube::Cube(glm::vec3 center, glm::vec3 sideLength, std::vector<glm::vec3> colors, std::vector<glm::vec2> textCoords, GLuint program, unsigned int textureNum) :vertexNum(24),indexNum(36),shaderProgram(program),cubeCenter(center), texture(textureNum) {
 
 	model = glm::mat4(1.0);
 
 	modelPos = glGetUniformLocation(shaderProgram, "model");
 
-	GLfloat side = sideLength / 2.0;
+	//glm::vec3 side = sideLength / 2.0f;
+	glm::vec3 side = sideLength;
+	side.x /= 2;
+	side.y /= 2;
+	side.z /= 2;
 
 	vertices = new GLfloat[72];
 
@@ -25,35 +29,35 @@ Cube::Cube(glm::vec3 center, GLfloat sideLength, std::vector<glm::vec3> colors, 
 	indices = new int[36];
 
 	GLfloat newVertices[72] = {
-		center.x - side, center.y - side, center.z - side,
-		center.x + side, center.y - side, center.z - side,
-		center.x + side, center.y + side, center.z - side,
-		center.x - side, center.y + side, center.z - side,
+		center.x - side.x, center.y - side.y, center.z - side.z,
+		center.x + side.x, center.y - side.y, center.z - side.z,
+		center.x + side.x, center.y + side.y, center.z - side.z,
+		center.x - side.x, center.y + side.y, center.z - side.z,
 
-		center.x + side, center.y - side, center.z + side,
-		center.x - side, center.y - side, center.z + side,
-		center.x - side, center.y + side, center.z + side,
-		center.x + side, center.y + side, center.z + side,
+		center.x + side.x, center.y - side.y, center.z + side.z,
+		center.x - side.x, center.y - side.y, center.z + side.z,
+		center.x - side.x, center.y + side.y, center.z + side.z,
+		center.x + side.x, center.y + side.y, center.z + side.z,
 		
-		center.x - side, center.y - side, center.z - side,
-		center.x - side, center.y - side, center.z + side,
-		center.x + side, center.y - side, center.z + side,
-		center.x + side, center.y - side, center.z - side,
+		center.x - side.x, center.y - side.y, center.z - side.z,
+		center.x - side.x, center.y - side.y, center.z + side.z,
+		center.x + side.x, center.y - side.y, center.z + side.z,
+		center.x + side.x, center.y - side.y, center.z - side.z,
 
-		center.x + side, center.y + side, center.z - side,
-		center.x + side, center.y + side, center.z + side,
-		center.x - side, center.y + side, center.z + side,
-		center.x - side, center.y + side, center.z - side,
+		center.x + side.x, center.y + side.y, center.z - side.z,
+		center.x + side.x, center.y + side.y, center.z + side.z,
+		center.x - side.x, center.y + side.y, center.z + side.z,
+		center.x - side.x, center.y + side.y, center.z - side.z,
 
-		center.x - side, center.y + side, center.z - side,
-		center.x - side, center.y + side, center.z + side,
-		center.x - side, center.y - side, center.z + side,
-		center.x - side, center.y - side, center.z - side,		
+		center.x - side.x, center.y + side.y, center.z - side.z,
+		center.x - side.x, center.y + side.y, center.z + side.z,
+		center.x - side.x, center.y - side.y, center.z + side.z,
+		center.x - side.x, center.y - side.y, center.z - side.z,		
 
-		center.x + side, center.y - side, center.z - side,
-		center.x + side, center.y - side, center.z + side,
-		center.x + side, center.y + side, center.z + side,
-		center.x + side, center.y + side, center.z - side
+		center.x + side.x, center.y - side.y, center.z - side.z,
+		center.x + side.x, center.y - side.y, center.z + side.z,
+		center.x + side.x, center.y + side.y, center.z + side.z,
+		center.x + side.x, center.y + side.y, center.z - side.z
 	};
 
 	
