@@ -12,10 +12,16 @@
 #define WHITE glm::vec3(1.0,1.0,1.0)
 #define YELLOW glm::vec3(1.0,1.0,0.0)
 #define ORANGE glm::vec3(1.0,0.5,0.0)
+/*#define RED glm::vec3(0.9,0.9,0.9)
+#define GREEN glm::vec3(0.9,0.9,0.9)
+#define BLUE glm::vec3(0.9,0.9,0.9)
+#define WHITE glm::vec3(0.9,0.9,0.9)
+#define YELLOW glm::vec3(0.9,0.9,0.9)
+#define ORANGE glm::vec3(0.9,0.9,0.9)*/
 #define BLACK glm::vec3(0.0,0.0,0.3)
 
 class Cube{
-	GLfloat *vertices, *vertexColors, *textureCoords;
+	GLfloat *vertices, *vertexColors, *textureCoords, *normal;
 	unsigned int shaderProgram, texture, VAO, VBOs[3], EBO, vertexNum, indexNum;
 	int *indices;
 	void init();
@@ -27,6 +33,7 @@ public:
 	Cube(glm::vec3 center, glm::vec3 sideLength, std::vector<glm::vec3> colors, std::vector<glm::vec2> textCoords, GLuint program, unsigned int textureNum);
 	void draw();
 	void rotate(GLfloat angle, int axis);
+	void traslate(glm::vec3 traslation);
 	void moveAway(glm::vec3 center, float distance);
     ~Cube();
 };

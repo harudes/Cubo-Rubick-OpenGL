@@ -40,39 +40,68 @@ glm::vec3 cameraUp(0, 1, -1);
 glm::vec3 cameraEye(0, 2, 2);
 */
 
-glm::vec3 cameraUp(0, 0, 1);
-glm::vec3 cameraEye(5, 0, 0);
+glm::vec3 cameraUp(0.0, 0.0, 1.0);
+glm::vec3 cameraEye(7.0, 0.0, 0.0);
+glm::vec3 lightOrigin(-5.0,5.0,5.0);
 
 GLuint projectionPos;
 GLuint modelviewPos;
+GLuint lightPosPos;
+GLuint viewPosPos;
+GLuint lightColorPos;
 
 const unsigned int SCR_WIDTH = 500;
 const unsigned int SCR_HEIGHT = 500;
 
 const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 position;\n"
-"layout (location = 1) in vec3 color;\n"
+"layout (location = 0) in vec3 aPos;\n"
+"layout (location = 1) in vec3 aColor;\n"
 "layout (location = 2) in vec2 aTexCoord;\n"
+"layout (location = 3) in vec3 aNormal;\n"
 "out vec3 Color;\n"
 "out vec2 TexCoord;\n"
+"out vec3 FragPos;\n"
+"out vec3 Normal;\n"
 "uniform mat4 model;\n"
 "uniform mat4 view;\n"
 "uniform mat4 projection;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = projection * view * model * vec4(position, 1.0f);\n"
-"	Color = color;\n"
+"	FragPos = vec3(model * vec4(aPos,1.0));\n"
+"	Normal = mat3(transpose(inverse(model))) * aNormal;\n"
+"   gl_Position = projection * view * model * vec4(aPos, 1.0f);\n"
+"	Color = aColor;\n"
 "	TexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
 "}\n\0";
 
 const char* fragmentShaderSource = "#version 330 core\n"
 "in vec3 Color;\n"
 "in vec2 TexCoord;\n"
+"in vec3 FragPos;\n"
+"in vec3 Normal;\n"
 "out vec4 fragColor;\n"
 "uniform sampler2D texture1;\n"
+"uniform vec3 lightPos;\n"
+"uniform vec3 viewPos;\n"
+"uniform vec3 lightColor;\n"
 "void main(void)\n"
 "{\n"
-"   fragColor = texture(texture1, TexCoord) * vec4(Color, 1.0f);\n"
+"	float ambientStrenght = 0.8f;\n"//ambient
+"	vec3 ambient = ambientStrenght * lightColor;\n"
+""
+"	vec3 norm = normalize(Normal);\n"//diffuse
+"	vec3 lightDir = normalize(lightPos - FragPos);\n"
+"	float diff = max(dot(norm, lightDir),0.0);\n"
+"	vec3 diffuse = diff * lightColor;\n"
+""
+"	float specularStrenght = 2.0f;\n"//specular
+"	vec3 viewDir = normalize(viewPos - FragPos);\n"
+"	vec3 reflectDir = reflect(-lightDir, norm);\n"
+"	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n"
+"	vec3 specular = specularStrenght * spec * lightColor;\n"
+""
+"	vec3 result = (ambient + diffuse + specular) * Color;\n"
+"   fragColor = texture(texture1, TexCoord) * vec4(result, 1.0f);\n"
 "}\n\0";
 
 int main(int agrc, char* argv[])
@@ -139,11 +168,18 @@ int main(int agrc, char* argv[])
 
 	projectionPos = glGetUniformLocation(shaderProgram, "projection");
 	modelviewPos = glGetUniformLocation(shaderProgram, "view");
-	modelview = glm::lookAt(cameraEye,cameraCenter,cameraUp);
+	lightPosPos = glGetUniformLocation(shaderProgram, "lightPos");
+	viewPosPos = glGetUniformLocation(shaderProgram, "viewPos");
+	lightColorPos = glGetUniformLocation(shaderProgram, "lightColor");
+	modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
 	projection = glm::mat4(1.0f);
 	framebuffer_size_callback(window, 500, 500);
 	glUniformMatrix4fv(projectionPos, 1, GL_FALSE, &projection[0][0]);
 	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
+	glUniform3f(viewPosPos,cameraEye.x,cameraEye.y,cameraEye.z);
+	glUniform3f(lightColorPos, 1.0f, 1.0f, 1.0f);
+	//glUniform3f(lightPosPos, lightOrigin.x, lightOrigin.y, lightOrigin.z);
+	glUniform3f(lightPosPos, -cameraEye.x*2, -cameraEye.y*2, -5.0f);
 
 
 	//~~~~~~~~~~~~~~~~ CREATE THE TEXTURE ~~~~~~~~~~~~~~~~~~~~~~~
@@ -174,14 +210,14 @@ int main(int agrc, char* argv[])
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(data);
-	
+
 
 	//~~~~~~~~~~~~~~~~ CREATE THE RUBICK'S CUBE~~~~~~~~~~~~~~~~~~	
 	shader = shaderProgram;
-	
-	cuboRubick = new RubickCube(glm::vec3(centerX,centerY,centerZ), arista, offset, shader, texture);
+
+	cuboRubick = new RubickCube(glm::vec3(centerX, centerY, centerZ), arista, offset, shader, texture);
 	cuboRubick->generateCube();
-	
+
 	/*string randomCube = randomize();
 
 	cout << randomCube << endl;*/
@@ -193,7 +229,7 @@ int main(int agrc, char* argv[])
 	float frameRate = 1.0f / 60.0f;
 
 	while (!glfwWindowShouldClose(window))
-	{	
+	{
 		time = glfwGetTime();
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -202,7 +238,7 @@ int main(int agrc, char* argv[])
 			cuboRubick->movement();
 			glfwSetTime(0);
 		}
-		
+
 		cuboRubick->Draw();
 
 		glfwSwapBuffers(window);
@@ -215,7 +251,7 @@ int main(int agrc, char* argv[])
 
 void processInput(GLFWwindow* window)
 {
-	
+
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h)
@@ -242,7 +278,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glfwSetWindowShouldClose(window, true);
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		rotation = glm::rotate(glm::mat4(1.0f), glm::pi<float>()/12, glm::vec3(0.0f, 0.0f, 1.0f));
+		rotation = glm::rotate(glm::mat4(1.0f), glm::pi<float>() / 12, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
@@ -253,7 +289,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (abs(cameraEye.x) < 0.00001f) {
 			rotation = glm::rotate(glm::mat4(1.0f), -glm::pi<float>() / 12, glm::vec3(1.0f, 0.0f, 0.0f));
 		}
-		if (abs(cameraEye.y) < 0.00001f){
+		if (abs(cameraEye.y) < 0.00001f) {
 			rotation = glm::rotate(glm::mat4(1.0f), -glm::pi<float>() / 12, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
 	}
@@ -278,9 +314,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		cuboRubick->restartCube();
 		cuboRubick->generateCube();
 		cameraUp = glm::vec3(0, 0, 1);
-		cameraEye = glm::vec3(5, 0, 0);
+		cameraEye = glm::vec3(7, 0, 0);
 		modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
 		glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
+		glUniform3f(viewPosPos, cameraEye.x, cameraEye.y, cameraEye.z);
 	}
 	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
 		//~~~~~~~~~~~~~~~~ OBTAINING RUBBICKS DISORDERED ~~~~~~~~~~~~~~~~~~	
@@ -334,6 +371,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
 	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
+	glUniform3f(viewPosPos, cameraEye.x, cameraEye.y, cameraEye.z);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -345,11 +383,11 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	direction.z /= normal * 3;
 	if (yoffset > 0) {
 		if (abs(cameraEye.x) > 0.5 || abs(cameraEye.y) > 0.5 || abs(cameraEye.z) > 0.5)
-		cameraEye += direction;
+			cameraEye += direction;
 	}
 	else {
 		if (abs(cameraEye.x) < 30.0 || abs(cameraEye.y) < 30.0 || abs(cameraEye.z) < 30.0)
-		cameraEye -= direction;
+			cameraEye -= direction;
 	}
 	modelview = glm::lookAt(cameraEye, cameraCenter, cameraUp);
 	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
@@ -365,7 +403,7 @@ void printComands() {
 	std::cout << "|Presione la tecla W para girar la cara superior en sentido horario                                        |" << std::endl;
 	std::cout << "|Presione la tecla S para girar la cara inferior en sentido horario                                        |" << std::endl;
 	std::cout << "|Presione la tecla A para girar la cara izquierda en sentido horario                                       |" << std::endl;
-	std::cout << "|Presione la tecla D para girar la cara derecha en sentido horario                                         |"<< std::endl;
+	std::cout << "|Presione la tecla D para girar la cara derecha en sentido horario                                         |" << std::endl;
 	std::cout << "|Presione la tecla Z para girar la cara posterior en sentido horario                                       |" << std::endl;
 	std::cout << "|Presione la tecla X para girar la cara Trasera en sentido horario                                         |" << std::endl;
 	std::cout << "|Presione las flechas direccionales para mover la camara                                                   |" << std::endl;

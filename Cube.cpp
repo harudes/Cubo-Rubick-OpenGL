@@ -24,6 +24,8 @@ Cube::Cube(glm::vec3 center, glm::vec3 sideLength, std::vector<glm::vec3> colors
 
 	vertexColors = new GLfloat[72];
 
+	normal = new GLfloat[72];
+
 	textureCoords = new GLfloat[48];
 
 	indices = new int[36];
@@ -60,6 +62,38 @@ Cube::Cube(glm::vec3 center, glm::vec3 sideLength, std::vector<glm::vec3> colors
 		center.x + side.x, center.y + side.y, center.z - side.z
 	};
 
+	GLfloat newNormal[72] = {
+		0.0f, 0.0f , -1.0f,
+		0.0f, 0.0f , -1.0f,
+		0.0f, 0.0f , -1.0f,
+		0.0f, 0.0f , -1.0f,
+
+		0.0f, 0.0f , 1.0f,
+		0.0f, 0.0f , 1.0f,
+		0.0f, 0.0f , 1.0f,
+		0.0f, 0.0f , 1.0f,
+
+		0.0f, -1.0f , 0.0f,
+		0.0f, -1.0f , 0.0f,
+		0.0f, -1.0f , 0.0f,
+		0.0f, -1.0f , 0.0f,
+
+		0.0f, 1.0f , 0.0f,
+		0.0f, 1.0f , 0.0f,
+		0.0f, 1.0f , 0.0f,
+		0.0f, 1.0f , 0.0f,
+
+		-1.0f, 0.0f , 0.0f,
+		-1.0f, 0.0f , 0.0f,
+		-1.0f, 0.0f , 0.0f,
+		-1.0f, 0.0f , 0.0f,
+
+		1.0f, 0.0f , 0.0f,
+		1.0f, 0.0f , 0.0f,
+		1.0f, 0.0f , 0.0f,
+		1.0f, 0.0f , 0.0f
+	};
+
 	
 
 	GLubyte newIndices[36] = {
@@ -86,6 +120,8 @@ Cube::Cube(glm::vec3 center, glm::vec3 sideLength, std::vector<glm::vec3> colors
 		indices[i] = newIndices[i];
 		vertices[i * 2] = newVertices[i * 2];
 		vertices[i * 2 + 1] = newVertices[i * 2 + 1];
+		normal[i * 2] = newNormal[i * 2];
+		normal[i * 2 + 1] = newNormal[i * 2 + 1];
 	}
 
 	for (int i = 0; i < 72; i += 3) {
@@ -97,31 +133,14 @@ Cube::Cube(glm::vec3 center, glm::vec3 sideLength, std::vector<glm::vec3> colors
 	for (int i = 0; i < 24; ++i) {
 		textureCoords[i * 2] = textCoords[i].x;
 		textureCoords[i * 2 + 1] = textCoords[i].y;
-		/*switch (i % 4) {
-		case 0:
-			textureCoords[i * 2] = 0.0;
-			textureCoords[i * 2 + 1] = 0.0;
-			break;
-		case 1:
-			textureCoords[i * 2] = 0.0;
-			textureCoords[i * 2 + 1] = 1.0/3;
-			break;
-		case 2:
-			textureCoords[i * 2] = 1.0/6/3;
-			textureCoords[i * 2 + 1] = 1.0/3;
-			break;
-		case 3:
-			textureCoords[i * 2] = 1.0/6/3;
-			textureCoords[i * 2 + 1] = 0.0;
-			break;
-		}*/
 	}
 
 	init();
 
-	delete vertices;
-	delete vertexColors;
-	delete indices;
+	delete[] vertices;
+	delete[] vertexColors;
+	delete[] indices;
+	delete[] normal;
 }
 
 void Cube::draw() {
@@ -152,15 +171,20 @@ void Cube::rotate(GLfloat angle, int axis) {
 		direction = glm::vec3(0.0, 0.0, 1.0);
 		break;
 	}
-	model = glm::rotate(glm::mat4(1.0f), angle, direction)* model;
+	model = glm::rotate(glm::mat4(1.0f), angle, direction) * model;
 	cubeCenter = glm::mat3(glm::rotate(glm::mat4(1.0f), angle, direction)) * cubeCenter;
+}
+
+void Cube::traslate(glm::vec3 traslation) {
+	model = glm::translate(glm::mat4(1.0f), traslation) * model;
+	cubeCenter = glm::mat3(glm::translate(glm::mat4(1.0f), traslation)) * cubeCenter;
 }
 
 void Cube::init() {
 
 
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(3, VBOs);
+	glGenBuffers(4, VBOs);
 	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
@@ -182,6 +206,12 @@ void Cube::init() {
 
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOs[3]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(normal[0]) * vertexNum * 3, normal, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indexNum, indices, GL_STATIC_DRAW);
