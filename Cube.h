@@ -6,19 +6,21 @@
 #include <vector>
 #include <iostream>
 
-#define RED glm::vec3(1.0,0.0,0.0)
+/*#define RED glm::vec3(1.0,0.0,0.0)
 #define GREEN glm::vec3(0.0,1.0,0.0)
 #define BLUE glm::vec3(0.0,0.0,1.0)
 #define WHITE glm::vec3(1.0,1.0,1.0)
 #define YELLOW glm::vec3(1.0,1.0,0.0)
-#define ORANGE glm::vec3(1.0,0.5,0.0)
-/*#define RED glm::vec3(0.9,0.9,0.9)
-#define GREEN glm::vec3(0.9,0.9,0.9)
-#define BLUE glm::vec3(0.9,0.9,0.9)
-#define WHITE glm::vec3(0.9,0.9,0.9)
-#define YELLOW glm::vec3(0.9,0.9,0.9)
-#define ORANGE glm::vec3(0.9,0.9,0.9)*/
-#define BLACK glm::vec3(0.0,0.0,0.3)
+#define ORANGE glm::vec3(1.0,0.5,0.0)*/
+
+#define RED glm::vec3(0.81,0.8,0.8)
+#define GREEN glm::vec3(0.79,0.8,0.8)
+#define BLUE glm::vec3(0.8,0.81,0.8)
+#define WHITE glm::vec3(0.8,0.79,0.8)
+#define YELLOW glm::vec3(0.8,0.8,0.81)
+#define ORANGE glm::vec3(0.8,0.8,0.79)
+
+#define BLACK glm::vec3(0.0,0.0,0.0)
 
 class Cube{
 	GLfloat *vertices, *vertexColors, *textureCoords, *normal;

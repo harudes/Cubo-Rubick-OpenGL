@@ -24,7 +24,7 @@ GLfloat centerX = 0.0f,
 centerY = 0.0f,
 centerZ = 0.0f;
 GLfloat arista = 0.5; //tamaño de la arista de los cubitos
-GLfloat offset = 0.05;//tamaño de la distancia entre cubos
+GLfloat offset = 0.00;//tamaño de la distancia entre cubos
 GLuint shader;
 RubickCube* cuboRubick;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -94,7 +94,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "	float diff = max(dot(norm, lightDir),0.0);\n"
 "	vec3 diffuse = diff * lightColor;\n"
 ""
-"	float specularStrenght = 2.0f;\n"//specular
+"	float specularStrenght = 0.5f;\n"//specular
 "	vec3 viewDir = normalize(viewPos - FragPos);\n"
 "	vec3 reflectDir = reflect(-lightDir, norm);\n"
 "	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n"
@@ -125,7 +125,7 @@ int main(int agrc, char* argv[])
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Basic OpenGL Program", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Rubick Cube Simulator", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -231,7 +231,7 @@ int main(int agrc, char* argv[])
 	while (!glfwWindowShouldClose(window))
 	{
 		time = glfwGetTime();
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (time > frameRate) {
