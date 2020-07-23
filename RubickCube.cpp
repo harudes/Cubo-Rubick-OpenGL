@@ -25,7 +25,6 @@ RubickCube::RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint 
 }
 
 void RubickCube::restartCube() {
-	//this->colors = "UUUUUUUUULLLLLLLLLFFFFFFFFFRRRRRRRRRBBBBBBBBBDDDDDDDDD";
 	this->colors = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 }
 
@@ -227,12 +226,6 @@ void RubickCube::generateCube(){
 	glm::vec3 centers[3][3][3];
 	getCenters(centers);
 
-	std::cout << centers[1][1][2].x << " " << centers[1][1][2].y << " " << centers[1][1][2].z << " " << std::endl;
-	std::cout << sizeDistribution[1][1][2].x << " " << sizeDistribution[1][1][2].y << " " << sizeDistribution[1][1][2].z << " " << std::endl;
-
-	std::cout << centers[0][1][2].x << " " << centers[0][1][2].y << " " << centers[0][1][2].z << " " << std::endl;
-	std::cout << sizeDistribution[0][1][2].x << " " << sizeDistribution[0][1][2].y << " " << sizeDistribution[0][1][2].z << " " << std::endl;
-
 	updateColors(auxColors, { BLACK,BLACK,BLACK,BLACK,BLACK,getCharColor(colors[getDuplePosition("F5")]) });
 	cubitos[0] = new Cube(centers[2][1][1], sizeDistribution[2][1][1] , auxColors, getTextureCoords(auxColors, { 0,0,0,0,0,5 }), shaderProgram, texture);//F5
 	updateColors(auxColors, { BLACK,BLACK,BLACK,BLACK,BLACK,BLACK });
@@ -266,13 +259,11 @@ void RubickCube::generateCube(){
 	cubitos[12] = new Cube(centers[2][1][2], sizeDistribution[2][1][2], auxColors, getTextureCoords(auxColors, { 0,8,0,0,0,2 }), shaderProgram, texture);//F2, U8
 	updateColors(auxColors, { BLACK,getCharColor(colors[getDuplePosition("U5")]),BLACK,BLACK,BLACK,BLACK });
 	cubitos[13] = new Cube(centers[1][1][2], sizeDistribution[1][1][2], auxColors, getTextureCoords(auxColors, { 0,5,0,0,0,0 }), shaderProgram, texture);//U5
-	////////////////////////////////////////////////////////////////////////////////////////
 	updateColors(auxColors, { BLACK,getCharColor(colors[getDuplePosition("U2")]),BLACK,BLACK,getCharColor(colors[getDuplePosition("B2")]),BLACK });
 	cubitos[14] = new Cube(centers[0][1][2], sizeDistribution[0][1][2], auxColors, getTextureCoords(auxColors, { 0,2,0,0,2,0 }), shaderProgram, texture);//U2, B8
 
 	updateColors(auxColors, { BLACK,getCharColor(colors[getDuplePosition("U9")]),BLACK,getCharColor(colors[getDuplePosition("R1")]),BLACK,getCharColor(colors[getDuplePosition("F3")]) });
 	cubitos[15] = new Cube(centers[2][2][2], sizeDistribution[2][2][2], auxColors, getTextureCoords(auxColors, { 0,9,0,1,0,3 }), shaderProgram, texture);//F3,U9,R1
-	////////////////////////////////////////////////////////////////////////////////////////
 	updateColors(auxColors, { BLACK,getCharColor(colors[getDuplePosition("U6")]),BLACK,getCharColor(colors[getDuplePosition("R2")]),BLACK,BLACK });
 	cubitos[16] = new Cube(centers[1][2][2], sizeDistribution[1][2][2], auxColors, getTextureCoords(auxColors, { 0,6,0,2,0,0 }), shaderProgram, texture);//R2, U8
 	updateColors(auxColors, { BLACK,getCharColor(colors[getDuplePosition("U3")]),BLACK,getCharColor(colors[getDuplePosition("R3")]),getCharColor(colors[getDuplePosition("B1")]),BLACK });
@@ -304,6 +295,11 @@ void RubickCube::generateCube(){
 	for (auto cubito : cubitos) {
 		cubito->traslate(-centers[1][1][1]);
 	}
+
+	centerX = centers[1][1][1].x;
+	centerY = centers[1][1][1].y;
+	centerZ = centers[1][1][1].z;
+
 }
 
 
@@ -488,7 +484,7 @@ void RubickCube::Solve(std::vector<std::string> solution) {
 	}
 }
 
-void RubickCube::Scramble(std::vector<std::string> scramble) {
+void RubickCube::Scramble(std::vector<std::string> scramble) {//Desordenar el cubo
 	temp_moves = scramble;//Guardo los movimientos para usarlos para resolver
 	for (std::string move : scramble) {
 		scrambleQueue.push(move);

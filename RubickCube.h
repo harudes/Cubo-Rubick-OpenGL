@@ -46,7 +46,6 @@ private:
 	void updateIndex();
 	void getCenters(glm::vec3 cube[3][3][3]);
 	void getSizes(glm::vec3 cube[3][3][3]);
-	void traslate(glm::vec3 traslation);
 public:
 	RubickCube();
     RubickCube(glm::vec3 center, GLfloat arista, GLfloat offset, GLuint shaderProgram, unsigned int textureNum);
@@ -57,7 +56,7 @@ public:
 	void Draw();
 	void movement();
 	void Solve(std::vector<std::string> solution);
-	void Scramble(std::vector<std::string> scramble);
+	void Scramble(std::vector<std::string> scramble);//Desordenar el cubo
 	void expand(float distance);
 	bool setAnimation(std::string move);
 	std::vector<std::string> get_sol();

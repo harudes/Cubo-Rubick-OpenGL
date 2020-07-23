@@ -13,108 +13,10 @@ Cube::Cube(glm::vec3 center, glm::vec3 sideLength, std::vector<glm::vec3> colors
 	model = glm::mat4(1.0);
 
 	modelPos = glGetUniformLocation(shaderProgram, "model");
-
-	//glm::vec3 side = sideLength / 2.0f;
 	glm::vec3 side = sideLength;
 	side.x /= 2;
 	side.y /= 2;
 	side.z /= 2;
-
-	/*vertices = new GLfloat[72];
-
-	vertexColors = new GLfloat[72];
-
-	normal = new GLfloat[72];
-
-	textureCoords = new GLfloat[48];
-
-	indices = new int[36];
-
-	GLfloat newVertices[72] = {
-		center.x - side.x, center.y - side.y, center.z - side.z,
-		center.x + side.x, center.y - side.y, center.z - side.z,
-		center.x + side.x, center.y + side.y, center.z - side.z,
-		center.x - side.x, center.y + side.y, center.z - side.z,
-
-		center.x + side.x, center.y - side.y, center.z + side.z,
-		center.x - side.x, center.y - side.y, center.z + side.z,
-		center.x - side.x, center.y + side.y, center.z + side.z,
-		center.x + side.x, center.y + side.y, center.z + side.z,
-		
-		center.x - side.x, center.y - side.y, center.z - side.z,
-		center.x - side.x, center.y - side.y, center.z + side.z,
-		center.x + side.x, center.y - side.y, center.z + side.z,
-		center.x + side.x, center.y - side.y, center.z - side.z,
-
-		center.x + side.x, center.y + side.y, center.z - side.z,
-		center.x + side.x, center.y + side.y, center.z + side.z,
-		center.x - side.x, center.y + side.y, center.z + side.z,
-		center.x - side.x, center.y + side.y, center.z - side.z,
-
-		center.x - side.x, center.y + side.y, center.z - side.z,
-		center.x - side.x, center.y + side.y, center.z + side.z,
-		center.x - side.x, center.y - side.y, center.z + side.z,
-		center.x - side.x, center.y - side.y, center.z - side.z,		
-
-		center.x + side.x, center.y - side.y, center.z - side.z,
-		center.x + side.x, center.y - side.y, center.z + side.z,
-		center.x + side.x, center.y + side.y, center.z + side.z,
-		center.x + side.x, center.y + side.y, center.z - side.z
-	};
-
-	GLfloat newNormal[72] = {
-		0.0f, 0.0f , -1.0f,
-		0.0f, 0.0f , -1.0f,
-		0.0f, 0.0f , -1.0f,
-		0.0f, 0.0f , -1.0f,
-
-		0.0f, 0.0f , 1.0f,
-		0.0f, 0.0f , 1.0f,
-		0.0f, 0.0f , 1.0f,
-		0.0f, 0.0f , 1.0f,
-
-		0.0f, -1.0f , 0.0f,
-		0.0f, -1.0f , 0.0f,
-		0.0f, -1.0f , 0.0f,
-		0.0f, -1.0f , 0.0f,
-
-		0.0f, 1.0f , 0.0f,
-		0.0f, 1.0f , 0.0f,
-		0.0f, 1.0f , 0.0f,
-		0.0f, 1.0f , 0.0f,
-
-		-1.0f, 0.0f , 0.0f,
-		-1.0f, 0.0f , 0.0f,
-		-1.0f, 0.0f , 0.0f,
-		-1.0f, 0.0f , 0.0f,
-
-		1.0f, 0.0f , 0.0f,
-		1.0f, 0.0f , 0.0f,
-		1.0f, 0.0f , 0.0f,
-		1.0f, 0.0f , 0.0f
-	};
-
-	
-
-	GLubyte newIndices[36] = {
-		0, 1, 2,
-		0 ,2 ,3,
-
-		4 ,5 ,6,
-		4 ,6 ,7,
-
-		8 ,9,10,
-		8 ,10 ,11,
-
-		12 ,13 ,14,
-		12 ,14 ,15,
-
-		16 ,17 ,18,
-		16 ,18 ,19,
-
-		20 ,21 ,22,
-		20 ,22 ,23
-	};*/
 
 	std::vector<glm::vec3> newColors(6,BLACK);
 
@@ -419,10 +321,9 @@ void Cube::init() {
 
 void Cube::moveAway(glm::vec3 center, float distance) {
 	glm::vec3 direction = cubeCenter - center;
-	float normal = sqrt(pow(direction.x,2) + pow(direction.y,2) + pow(direction.z,2));
-	direction.x = direction.x / normal;
-	direction.y = direction.y / normal;
-	direction.z = direction.z / normal;
+	if (direction.x > 0) direction.x = 1;
+	if (direction.y > 0) direction.y= 1;
+	if (direction.z > 0) direction.z= 1;
 	model = glm::translate(glm::mat4(1.0), direction * distance) * model;
 
 	cubeCenter = glm::mat3(glm::translate(glm::mat4(1.0), direction * distance)) * cubeCenter;

@@ -8,7 +8,6 @@
 #include "RubickCube.h"
 #include "AllCube/random.h"
 #include "AllCube/solve.h"
-//#include "AKube.h"
 #include "stb_image.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h);
@@ -35,10 +34,6 @@ glm::mat4 projection;
 glm::mat4 modelview;
 
 glm::vec3 cameraCenter(0, 0, 0);
-/*
-glm::vec3 cameraUp(0, 1, -1);
-glm::vec3 cameraEye(0, 2, 2);
-*/
 
 glm::vec3 cameraUp(0.0, 0.0, 1.0);
 glm::vec3 cameraEye(7.0, 0.0, 0.0);
@@ -86,7 +81,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "uniform vec3 lightColor;\n"
 "void main(void)\n"
 "{\n"
-"	float ambientStrenght = 0.8f;\n"//ambient
+"	float ambientStrenght = 0.4f;\n"//ambient
 "	vec3 ambient = ambientStrenght * lightColor;\n"
 ""
 "	vec3 norm = normalize(Normal);\n"//diffuse
@@ -178,7 +173,6 @@ int main(int agrc, char* argv[])
 	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
 	glUniform3f(viewPosPos,cameraEye.x,cameraEye.y,cameraEye.z);
 	glUniform3f(lightColorPos, 1.0f, 1.0f, 1.0f);
-	//glUniform3f(lightPosPos, lightOrigin.x, lightOrigin.y, lightOrigin.z);
 	glUniform3f(lightPosPos, -cameraEye.x*2, -cameraEye.y*2, -5.0f);
 
 
@@ -198,8 +192,6 @@ int main(int agrc, char* argv[])
 	//stbi_set_flip_vertically_on_load(true);
 	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
 	unsigned char *data = stbi_load(imgRoute.c_str(), &width, &height, &nrChannels, 0);
-	//unsigned char *data = stbi_load("C://Users//luisf//Pictures//base UCSP.png", &width, &height, &nrChannels, 0);
-	//unsigned char *data = stbi_load("C://Users//luisf//Pictures//ov6ds6za7s951.jpg", &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);

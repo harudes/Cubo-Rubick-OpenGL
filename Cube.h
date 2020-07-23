@@ -30,6 +30,8 @@ class Cube{
 	glm::mat4 model;
 	GLuint modelPos;
 	glm::vec3 cubeCenter;
+
+	int orientation;
 public:
 	Cube(GLfloat *vertex, GLfloat *colors, int *index, GLuint program);
 	Cube(glm::vec3 center, glm::vec3 sideLength, std::vector<glm::vec3> colors, std::vector<glm::vec2> textCoords, GLuint program, unsigned int textureNum);
